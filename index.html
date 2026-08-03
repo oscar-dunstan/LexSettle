@@ -1,0 +1,2774 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  LEX SETTLE — MARKETING HOMEPAGE (PROTOTYPE v1)
+  ============================================================================
+
+  DIRECTION CONTRACT
+
+  THESIS: A property settlement is two people trying to agree on one number.
+    This page owns "one shared surface" — a single continuous field that both
+    parties stand on. It refuses the category default: a white SaaS page with
+    a screenshot in a floating card and three icon-tiles underneath.
+
+  OWN-WORLD: One fixed, slowly-moving navy/indigo silk gradient behind the
+    entire document (ref: tiwis.fr). White type sits directly on it. Content
+    arrives as opaque white slabs with a 32px radius that slide over the field
+    like sheets of paper on a desk — the field never scrolls, so the page
+    parallaxes by construction. Inter, tight tracking, large display sizes.
+    Accent blue #2563EB for action; green #16A34A for agreement state only.
+
+  STORY: Visitor understands Lex Settle calculates the property pool and hosts
+    the negotiation; believes it is a neutral, structured tool (not advice);
+    acts by starting a matter for $44.
+
+  FIRST VIEWPORT: Full-bleed moving gradient. Headline set left at display
+    scale over ~7 columns, subhead beneath at 60ch, two CTAs (solid white
+    primary / hairline secondary) immediately below. Right ~5 columns hold the
+    net-property-pool app frame, docked and slightly overlapping the fold.
+
+  FORM: Continuous-field editorial. Brief-pinned (user supplied tiwis.fr as
+    the reference); no concept roll was run — a pinned brief beats the roll.
+
+  ============================================================================
+  BUILD NOTES FOR THE DESIGNER
+  ----------------------------------------------------------------------------
+  · Every colour, type size, spacing step and radius is a CSS variable in
+    :root below. Change tokens there, not in the markup.
+  · Sections are numbered + commented to map 1:1 onto Webflow sections.
+  · The gradient field is one <div> + CSS keyframes — it ports to Webflow as a
+    single embed placed once at the top of the body.
+  · Grey dashed frames = app screenshots you need to supply. Each is labelled
+    with the exact screen required. No app UI has been invented.
+  · Logo is a placeholder wordmark — no brand kit confirmed yet.
+  ============================================================================
+-->
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lex Settle — Calculate your property pool. Agree on the split.</title>
+<meta name="description" content="Lex Settle helps separating parties, solicitors and mediators build a clear schedule of assets and liabilities, propose a settlement, and negotiate it in one place. $44 per matter.">
+
+<!-- Icons. Both generated from the supplied lockup by taking the mark's two
+     paths on their own — the wordmark is illegible at 32px and worse at 16px, so
+     a favicon cut from the full lockup is just a smudge.
+     · favicon.svg is the mark as-is, transparent, and scales to every size.
+     · apple-touch-icon is OPAQUE, white mark on the brand navy. iOS composites a
+       transparent touch icon onto black, which would swallow the mark's #03045E
+       body and leave only the cyan accent floating.
+     No .ico: every browser that needs one is long unsupported here anyway, and
+     the SVG covers the rest. -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#0C1526">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:     'var(--color-ink)',
+          navy:    'var(--color-navy)',
+          indigo:  'var(--color-indigo)',
+          primary: 'var(--color-primary)',
+          accent:  'var(--color-accent)',
+          body:    'var(--color-text)',
+          muted:   'var(--color-muted)',
+          surface: 'var(--color-surface)',
+          hairline:'var(--color-border)',
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+/* ==========================================================================
+   0. DESIGN TOKENS  —  edit everything here
+   ========================================================================== */
+:root {
+  /* --- Colour: base (from the Lex Settle app) --- */
+  --color-bg:        #FFFFFF;
+  --color-surface:   #F7F8FA;
+  --color-border:    #E5E7EB;
+  --color-ink:       #131A24;   /* headings, near-black navy */
+  --color-navy:      #1B2A4A;   /* deep navy */
+  --color-indigo:    #2B3A7A;   /* sidebar / base gradient partner */
+  --color-primary:   #2563EB;   /* bright blue — primary actions */
+  --color-accent:    #16A34A;   /* green — positive / agreed status */
+  --color-text:      #374151;   /* body */
+  --color-muted:     #6B7280;   /* secondary text */
+
+  /* --- Colour: the moving field (extends the app palette) --- */
+  --field-base:      #0C1526;   /* deepest ground */
+  --field-shadow:    #0A1424;   /* silk shadow blob */
+  --field-navy:      #1B2A4A;
+  --field-indigo:    #2B3A7A;
+
+  /* --- The silk shader's palette: a CONTRAST CONTRACT, not a mood board -----
+     These five are the only colours the fragment shader can emit, and the
+     sheen is a mix *toward* --field-peak rather than an additive highlight —
+     so every output pixel lands inside the convex hull of this list and the
+     field's brightest possible pixel is exactly --field-peak.
+     --field-peak sits at relative luminance 0.136, and the ceiling at which
+     --on-field-soft exactly clears 4.5:1 is 0.1445. So the margin is real but
+     THIN — about 6% of the way to failure, not the comfortable step implied by
+     an earlier version of this comment, which asserted 0.097 against a 0.106
+     ceiling. Both of those numbers were wrong, in the same direction, and the
+     effect was a peak that looked far safer on paper than it measures.
+     What that means in practice: this palette is at AA, not above it. Raising
+     --field-peak by even one step fails body copy on the field. Lower it and the
+     folds flatten into a black wash, which is the other way this effect dies.
+     Measured on the live canvas rather than assumed: the brightest pixel on the
+     whole field is exactly --field-peak, which is the convex-hull guarantee
+     below doing its job.
+     Adding an additive specular term breaks the guarantee silently, which is
+     why there isn't one. */
+  --field-trough:    #04081A;
+  --field-deep:      #131F3C;
+  --field-mid:       #243D70;
+  --field-peak:      #3A66B2;
+  --field-cobalt:    #2B57D6;   /* at the cap too — the hull is only as safe as its brightest vertex */
+
+  /* --- Colour: type on the field ---------------------------------------------
+     TWO GROUNDS, TWO TOKENS. The live gradient and the solid --field-base
+     panels are different backgrounds and cannot share a tertiary colour.
+
+     · On the LIVE FIELD there are two text tiers, not three. A third, dimmer
+       tier is arithmetically impossible: at the field's brightest a tertiary
+       colour would have to be as light as --on-field-soft to clear 4.5:1, so
+       it would not be dimmer. Tertiary on the field is therefore made with the
+       .label treatment — uppercase, 0.14em tracking, 600 — which separates it
+       by typography instead of by contrast. That is the better answer anyway.
+     · --on-field-faint is for SOLID --field-base only (the footer). There it
+       measures 6.7:1 and the third tier is real. Using it on the live gradient
+       is the bug this replaced: it measured 2.7:1 against the old field's
+       bright regions, so every kicker and price line on the gradient failed. */
+  --on-field:        #FFFFFF;   /* measured 5.64:1 on --field-peak */
+  --on-field-soft:   #E4EBF5;   /* tinted from the field hue, never grey — measured 4.70:1 */
+  --on-field-faint:  #8FA6C8;   /* solid --field-base only — 7.35:1 there, 2.7:1 on the live field */
+
+  /* --gradient-band is gone: its only consumer was the placeholder logo tile in
+     the scrolled nav, and the real lockup brings its own colour. A token with no
+     consumer is a suggestion to invent one. */
+
+  /* --- Type --- */
+  --font-sans:  'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fs-display: clamp(2.9rem, 6.6vw, 5.5rem);
+  --fs-h2:      clamp(2.05rem, 4.1vw, 3.4rem);
+  --fs-h3:      clamp(1.3rem, 1.9vw, 1.65rem);
+  --fs-lead:    clamp(1.08rem, 1.5vw, 1.3rem);
+  --fs-body:    1.0625rem;
+  --fs-small:   0.9375rem;
+  --fs-label:   0.75rem;
+  --lh-display: 1.02;
+  --lh-heading: 1.08;
+  --lh-body:    1.65;
+  --tr-display: -0.038em;
+  --tr-heading: -0.028em;
+  --tr-label:   0.14em;
+
+  /* --- Spacing scale --- */
+  --sp-1:  0.5rem;
+  --sp-2:  1rem;
+  --sp-3:  1.5rem;
+  --sp-4:  2rem;
+  --sp-5:  3rem;
+  --sp-6:  4rem;
+  --sp-7:  6rem;
+  --sp-8:  8rem;
+  --section-y:   clamp(4.5rem, 9vw, 8.5rem);   /* vertical rhythm inside slabs */
+  --field-y:     clamp(5rem, 11vw, 10rem);     /* vertical rhythm on the field */
+  --gutter:      clamp(1.25rem, 4vw, 4rem);
+  --measure:     68ch;
+  /* Left inset of the horizontal rail, so panel 1 aligns with the heading above it */
+  --rail-pad:    max(var(--gutter), calc((100vw - var(--maxw)) / 2 + var(--gutter)));
+
+  /* --- Shape --- */
+  --r-slab:   clamp(20px, 2.4vw, 34px);   /* price card only */
+  --r-card:   16px;                       /* hero frame only */
+  --r-pill:   999px;
+  --maxw:     1240px;
+
+  /* Ratio of the three how-it-works step assets, so the frames neither crop nor
+     letterbox them. 1.439 is measured off the delivered files (1800x1251 each,
+     all three identical). Re-export them at a different ratio and this is the one
+     number to change — see § 6. and the pinned rail. */
+  --step-ratio: 1.439;
+
+  /* --- Depth ---
+     Two shadows, because the page has exactly two objects that lift off their
+     ground: the hero frame and the price card. Everything else is a whole
+     region, a hairline, an image well or a knockout. Reaching for a third
+     shadow token means a card is being drawn that shouldn't be. */
+  --shadow-frame: 0 30px 70px -24px rgba(4, 10, 24, .65);
+  --shadow-slab:  0 24px 60px -20px rgba(6, 14, 30, .45), 0 2px 8px -2px rgba(6, 14, 30, .18);
+
+  /* --- Motion --- */
+  --ease-out:  cubic-bezier(.16, 1, .3, 1);
+  --dur-fast:  180ms;
+  --dur-med:   420ms;
+  --dur-slow:  900ms;
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 6rem; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--color-text);
+  background: var(--field-base);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* `clip` not `hidden`. Both contain the full-bleed frames, but `hidden`
+     turns <body> into a scroll container, which breaks position: sticky for
+     the pinned rail in section 4. `clip` creates no scroll container.
+     The `hidden` line is the fallback for engines without `clip`. */
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+h1, h2, h3, h4 { margin: 0; color: var(--color-ink); font-weight: 700; letter-spacing: var(--tr-heading); line-height: var(--lh-heading); text-wrap: balance; }
+p { margin: 0; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+
+::selection { background: var(--color-primary); color: #fff; }
+
+:where(a, button, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.on-field :where(a, button):focus-visible { outline-color: #fff; }
+
+/* ==========================================================================
+   1. THE FIELD — fixed, slowly-moving silk gradient behind the whole document
+      Ports to Webflow as a single embed dropped at the top of <body>.
+   ========================================================================== */
+/* z-index -1 (not 0) so .page needs no stacking context of its own — that is
+   what lets the knockout band in Section 9 blend against this field. */
+.field {
+  position: fixed;
+  inset: -12vmax;              /* over-bleed so blurred blobs never show an edge */
+  z-index: -1;
+  background: var(--field-base);
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+/* THE FALLBACK IS UNDER THE SAME CEILING. The blob layer used to peak at
+   #5C82BC and #2563EB — relative luminance 0.219 and 0.150, both far above the
+   0.097 ceiling the shader guarantees. That mattered the moment the tertiary
+   on-field type was promoted to --on-field-soft on the strength of that
+   ceiling: with WebGL the page measured 4.8:1, and without it the same text
+   over the steel blob measured 3.6:1. A contract that only holds on the fast
+   path is not a contract, so the fallback draws from the capped palette too.
+   --field-steel and --field-blue are gone rather than left unused. */
+
+/* --- 1a. The silk shader ---------------------------------------------------
+   The blob layer below is the *fallback*, not the design. Where WebGL is
+   available the canvas paints an opaque, domain-warped silk gradient over the
+   top and the blobs stand down.
+
+   Why a shader at all: a crease has a direction and a ridge. Five blurred
+   circles can make soft lobes and nothing else — no amount of extra layers,
+   blend modes or animated stops gets them to fold. The reference's field is a
+   shader for exactly this reason.
+
+   .field is inset -12vmax so its blurred blobs never show an edge. The canvas
+   needs no such over-bleed, so it cancels it with inset: 12vmax and covers
+   precisely the viewport — that also keeps the rendered pixel count honest.
+   Sizing/DPR/frame-rate budget lives in the <script>. */
+/* Explicit width/height, not `inset: 12vmax`. A <canvas> is a replaced element:
+   with left and right both set and width:auto it resolves to its *intrinsic*
+   size and ignores the opposite offset, so an inset shorthand silently leaves a
+   300px-wide canvas in the corner. The 12vmax offset cancels .field's
+   over-bleed, so this covers exactly the viewport. */
+.field__gl {
+  position: absolute;
+  top: 12vmax;
+  left: 12vmax;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  opacity: 0;
+  transition: opacity 1100ms var(--ease-out);
+}
+.field.is-gl .field__gl { opacity: 1; }
+/* Covered by an opaque canvas once the shader is live: animating five blurred
+   90–130px-radius layers under it is pure cost. Visibility is withdrawn only
+   after the crossfade, so the handover is never visible. */
+.field.is-gl .field__blob {
+  animation: none;
+  visibility: hidden;
+  transition: visibility 0s linear 1100ms;
+  /* AND GIVE THE LAYERS BACK. will-change on the base rule is correct while the
+     blobs are the field — they animate continuously — but once the shader has taken
+     over they are hidden and their animation is off, and a promoted layer that
+     never changes is pure cost: five over-bleed, 78–92vmax layers held on the GPU
+     for nothing, on exactly the hardware the fallback exists to serve. */
+  will-change: auto;
+}
+/* The grain layer stays on over the shader — it is native resolution and the
+   shader's buffer is not, so this is the only place 1px grain can come from. */
+
+.field__blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  will-change: transform;
+  transform: translateZ(0);
+}
+@media (min-width: 768px) { .field__blob { filter: blur(130px); } }
+
+.field__blob--a { width: 78vmax; height: 78vmax; left: -18vmax; top: -22vmax;
+  background: radial-gradient(circle at 50% 50%, var(--field-peak) 0%, rgba(58,102,178,.45) 45%, rgba(58,102,178,0) 70%);
+  animation: driftA 34s var(--ease-out) infinite alternate; }
+.field__blob--b { width: 92vmax; height: 92vmax; right: -30vmax; top: -14vmax;
+  background: radial-gradient(circle at 50% 50%, var(--field-indigo) 0%, rgba(43,58,122,.55) 48%, rgba(43,58,122,0) 72%);
+  animation: driftB 44s var(--ease-out) infinite alternate; }
+.field__blob--c { width: 70vmax; height: 70vmax; left: 8vmax; bottom: -26vmax;
+  background: radial-gradient(circle at 50% 50%, var(--field-cobalt) 0%, rgba(43,87,214,.38) 46%, rgba(43,87,214,0) 70%);
+  animation: driftC 52s var(--ease-out) infinite alternate; }
+.field__blob--d { width: 86vmax; height: 86vmax; left: 22vmax; top: 6vmax;
+  background: radial-gradient(circle at 50% 50%, var(--field-shadow) 0%, rgba(10,20,36,.82) 42%, rgba(10,20,36,0) 68%);
+  animation: driftD 38s var(--ease-out) infinite alternate; }
+.field__blob--e { width: 58vmax; height: 58vmax; right: -8vmax; bottom: -18vmax;
+  background: radial-gradient(circle at 50% 50%, var(--field-navy) 0%, rgba(27,42,74,.6) 50%, rgba(27,42,74,0) 74%);
+  animation: driftE 46s var(--ease-out) infinite alternate; }
+
+@keyframes driftA { from { transform: translate3d(0,0,0) scale(1); }      to { transform: translate3d(14vmax, 10vmax, 0) scale(1.18); } }
+@keyframes driftB { from { transform: translate3d(0,0,0) scale(1.1); }    to { transform: translate3d(-16vmax, 16vmax, 0) scale(.92); } }
+@keyframes driftC { from { transform: translate3d(0,0,0) scale(.95); }    to { transform: translate3d(18vmax, -14vmax, 0) scale(1.22); } }
+@keyframes driftD { from { transform: translate3d(0,0,0) scale(1.05); }   to { transform: translate3d(-20vmax, -8vmax, 0) scale(.88); } }
+@keyframes driftE { from { transform: translate3d(0,0,0) scale(1); }      to { transform: translate3d(-12vmax, -18vmax, 0) scale(1.15); } }
+
+/* --- FILM GRAIN. Native resolution, and animated.
+       This is the "noisy" half of the reference's look, and there it is a
+       shader pass that reseeds per-pixel white noise off floor(uTime) and mixes
+       it at 4% — animated grain, not a fixed texture. Two things follow:
+
+       · It cannot live in the field shader. That buffer renders at half scale
+         and is upscaled, so per-fragment noise lands on screen as ~2px blocks —
+         chunky digital noise instead of grain. This layer is a DOM element at
+         native resolution, so its grain is 1px.
+       · It has to move. A static turbulence texture is a paper texture; the
+         shimmer is what reads as film.
+
+       Animated by stepping `transform` through ten offsets a second. Transform
+       is the only property here that stays on the compositor — animating
+       background-position would repaint a full-viewport layer 10 times a
+       second. The layer is oversized by 50% each way so the translations never
+       expose an edge. --- */
+.field__grain {
+  position: absolute;
+  inset: -25%;
+  width: 150%; height: 150%;
+  opacity: .15;
+  /* soft-light, not overlay. Overlay with a greyscale noise texture drags
+     saturation out of exactly the midtones this field lives in — part of why an
+     earlier build read grey rather than blue. soft-light grains just as
+     legibly and leaves the chroma alone. */
+  mix-blend-mode: soft-light;
+  background-repeat: repeat;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  will-change: transform;
+}
+/* Ten discrete offsets, held (steps) rather than interpolated — interpolating
+   would slide the texture, which reads as drifting paper, not as grain. */
+@keyframes grainStep {
+  0%   { transform: translate3d(0, 0, 0); }
+  10%  { transform: translate3d(-6%, 3%, 0); }
+  20%  { transform: translate3d(4%, -5%, 0); }
+  30%  { transform: translate3d(-3%, -4%, 0); }
+  40%  { transform: translate3d(5%, 4%, 0); }
+  50%  { transform: translate3d(-5%, -2%, 0); }
+  60%  { transform: translate3d(2%, 5%, 0); }
+  70%  { transform: translate3d(-4%, 4%, 0); }
+  80%  { transform: translate3d(6%, -3%, 0); }
+  90%  { transform: translate3d(-2%, -6%, 0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .field__grain { animation: grainStep 1s steps(1, end) infinite; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .field__blob { animation: none !important; }
+  /* Under reduced motion the shader still renders — one static frame, so the
+     silk is present and simply holds still, which is better than dropping to
+     the blob fallback. But the handover itself must not be an animation: swap
+     the layers on the same frame rather than cross-fading for a second. */
+  .field__gl { transition: none !important; }
+  .field.is-gl .field__blob { transition: none !important; }
+}
+
+/* ==========================================================================
+   2. LAYOUT PRIMITIVES
+   ========================================================================== */
+/* No z-index here on purpose — see .field above. */
+.page { position: relative; }
+.wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+
+/* --- Region A: sections that sit directly on the field --- */
+.on-field { color: var(--on-field-soft); padding-block: var(--field-y); }
+.on-field h1, .on-field h2, .on-field h3 { color: var(--on-field); }
+
+/* --- Region B: one continuous full-bleed white sheet, edge to edge.
+       Deliberately NOT floating rounded cards — the page alternates whole
+       regions, not a stack of panels. --- */
+.white-run { background: var(--color-bg); color: var(--color-text); }
+.white-run > section { padding-block: var(--section-y); }
+.white-run > section + section { border-top: 1px solid var(--color-border); }
+/* The knockout above already opened the sheet and carries the heading, so this
+   section starts on its content, not on a full section's worth of air. */
+.white-run > section.is-after-knockout { padding-top: var(--sp-6); }
+
+/* Hairline column heads, used on the field where a card would be too heavy */
+.ruled { border-top: 1px solid rgba(255,255,255,.26); padding-top: var(--sp-3); }
+
+/* ==========================================================================
+   3. TYPE HELPERS
+   ========================================================================== */
+.display   { font-size: var(--fs-display); line-height: var(--lh-display); letter-spacing: var(--tr-display); font-weight: 700; }
+.h2        { font-size: var(--fs-h2); }
+.h3        { font-size: var(--fs-h3); letter-spacing: -0.02em; }
+.lead      { font-size: var(--fs-lead); line-height: 1.55; max-width: var(--measure); }
+.small     { font-size: var(--fs-small); }
+.measure   { max-width: var(--measure); }
+.label {
+  font-size: var(--fs-label); font-weight: 600; letter-spacing: var(--tr-label);
+  text-transform: uppercase; line-height: 1.4;
+}
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* ==========================================================================
+   4. BUTTONS & LINKS
+   ========================================================================== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  min-height: 48px; padding: 0 1.5rem;
+  border-radius: var(--r-pill); border: 1px solid transparent;
+  font-size: var(--fs-small); font-weight: 600; letter-spacing: -0.01em;
+  text-decoration: none; cursor: pointer; white-space: nowrap;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out);
+}
+.btn:active { transform: translateY(1px); }
+
+/* On the field */
+.btn--light   { background: #fff; color: var(--color-ink); box-shadow: 0 8px 24px -10px rgba(4,10,24,.7); }
+.btn--light:hover   { background: #EAF0FB; }
+.btn--ghost   { background: rgba(255,255,255,.06); color: #fff; border-color: rgba(255,255,255,.42); backdrop-filter: blur(8px); }
+.btn--ghost:hover   { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.75); }
+
+/* On white */
+.btn--primary { background: var(--color-primary); color: #fff; box-shadow: 0 8px 20px -10px rgba(9, 18, 36, .55); }
+.btn--primary:hover { background: #1D4FD8; box-shadow: 0 12px 26px -10px rgba(9, 18, 36, .6); }
+.btn--outline { background: transparent; color: var(--color-ink); border-color: var(--color-border); }
+.btn--outline:hover { border-color: var(--color-ink); background: var(--color-surface); }
+
+.btn--lg { min-height: 54px; padding: 0 1.9rem; font-size: 1rem; }
+
+/* Stacked CTAs read as one block on narrow screens */
+@media (max-width: 479px) { .cta-row .btn { width: 100%; } }
+
+.textlink {
+  text-decoration: none; font-weight: 500;
+  border-bottom: 1px solid currentColor; padding-bottom: 1px;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+.textlink:hover { opacity: .65; }
+
+/* ==========================================================================
+   5. NAV  (transparent over the hero → white sheet once you scroll)
+   ========================================================================== */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+  transition: background-color var(--dur-med) var(--ease-out),
+              box-shadow var(--dur-med) var(--ease-out),
+              border-color var(--dur-med) var(--ease-out),
+              backdrop-filter var(--dur-med) var(--ease-out);
+  border-bottom: 1px solid transparent;
+}
+/* THREE COLUMNS, so the middle one is ACTUALLY centred.
+   This was a flex row with `margin-inline: auto` on the links and
+   `margin-left: auto` on the actions — three auto margins, and flexbox divides
+   free space equally between all of them. At 1280px that is 131.56px each, which
+   gives the links one share on their left and two on their right: measured 110.5px
+   left of centre. Auto margins cannot centre a middle item when a sibling also
+   claims one; they can only centre it against a single opposing auto.
+
+   `1fr auto 1fr` centres the middle column on the container and keeps it there as
+   the flanks change width — and they do: the logo swaps between two files and the
+   actions drop their CTA below 520px. It also puts the links on the same axis as
+   the hero copy and the device below it, which is the axis the first viewport is
+   already built on.
+
+   EVERY ITEM NAMES ITS COLUMN, and that is not belt-and-braces. Below 900px the
+   links are `display: none`, which does not make them a zero-width grid item — it
+   stops them being a grid item at all, so auto-placement slid the actions up into
+   column 2 and left the hamburger stranded mid-row at 167px instead of pinned to
+   the right edge. Explicit `grid-column` makes each item's position independent of
+   how many siblings are currently rendered. */
+.nav__inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center; gap: var(--sp-3);
+  min-height: 72px;
+  width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter);
+}
+/* justify-self, because a grid item defaults to stretching its column: the logo
+   would keep its 118px of artwork but carry a ~500px-wide clickable box. */
+.nav .logo { grid-column: 1; justify-self: start; }
+.nav__links { display: none; grid-column: 2; gap: 1.75rem; justify-self: center; }
+.nav__link {
+  text-decoration: none; font-size: var(--fs-small); font-weight: 500;
+  color: rgba(255,255,255,.82); padding: .5rem 0;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.nav__link:hover { color: #fff; }
+/* justify-self: end, not margin-left: auto — that auto margin was one of the three
+   competing for free space and part of why the links sat off-centre. */
+.nav__actions { display: flex; align-items: center; gap: .75rem; grid-column: 3; justify-self: end; }
+.nav__signin {
+  display: none; text-decoration: none; font-size: var(--fs-small); font-weight: 600;
+  color: rgba(255,255,255,.9); min-height: 44px; align-items: center; padding-inline: .5rem;
+}
+.nav__signin:hover { color: #fff; }
+
+/* scrolled state */
+.nav.is-scrolled {
+  background: rgba(255,255,255,.92);
+  backdrop-filter: saturate(180%) blur(16px);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  border-bottom-color: var(--color-border);
+}
+.nav.is-scrolled .nav__link   { color: var(--color-text); }
+.nav.is-scrolled .nav__link:hover { color: var(--color-ink); }
+.nav.is-scrolled .nav__signin { color: var(--color-ink); }
+/* The logo's scrolled state is a file swap now, not a recolour — see § Logo. */
+.nav.is-scrolled .btn--light  { background: var(--color-primary); color: #fff; box-shadow: 0 8px 20px -10px rgba(9, 18, 36, .45); }
+.nav.is-scrolled .btn--light:hover { background: #1D4FD8; }
+.nav.is-scrolled .navtoggle   { color: var(--color-ink); border-color: var(--color-border); }
+
+@media (min-width: 900px) {
+  .nav__links { display: flex; }
+  .nav__signin { display: inline-flex; }
+}
+
+/* Logo — the supplied brand lockup, 142x41.
+   Replaces a placeholder that drew its own 30px rounded tile with "LS" set in
+   Inter. The tile is gone rather than kept as a container: the real mark is its
+   own shape at 44x40 and reads as one object with the wordmark, so wrapping it
+   would put a box around a logo that already has an edge.
+
+   TWO FILES, NOT ONE WITH currentColor. The supplied mark is two-tone — #03045E
+   body with a #21ABF0 accent — so driving it from a single CSS colour would
+   flatten the accent and quietly redraw the brand. The white file is the brand's
+   own single-colour variant, not a tint of the colour one, which is the other
+   reason a filter or a mask would be the wrong tool here.
+
+   34px tall is matched to the type it replaces, not picked: the wordmark's cap
+   height is 14.5 of the file's 41 units, so at 34px it renders at 12.0px against
+   the 12.4px cap height of the 17px Inter wordmark that was there. The lockup
+   comes out 118px wide against the placeholder's ~125px, so the nav's balance
+   is unchanged. */
+.logo { display: inline-flex; align-items: center; text-decoration: none; color: #fff; min-height: 44px; }
+.logo__img { display: block; width: auto; height: 34px; }
+
+/* In the nav the logo crosses two grounds — transparent over the dark field,
+   then a white sheet once scrolled — so both variants ship and cross-fade on the
+   nav's own timing. Stacked absolutely rather than toggled with `display`, so the
+   swap cannot reflow the header mid-transition. */
+.nav .logo { position: relative; }
+.nav .logo__img { transition: opacity var(--dur-med) var(--ease-out); }
+.nav .logo__img--dark {
+  position: absolute; top: 50%; left: 0;
+  transform: translateY(-50%);
+  opacity: 0;
+}
+.nav.is-scrolled .logo__img--light { opacity: 0; }
+.nav.is-scrolled .logo__img--dark  { opacity: 1; }
+
+/* Mobile nav */
+.navtoggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: transparent; border: 1px solid rgba(255,255,255,.34); color: #fff; cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              color var(--dur-med) var(--ease-out);
+}
+.navtoggle:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.7); }
+.nav.is-scrolled .navtoggle:hover { background: var(--color-surface); border-color: var(--color-ink); }
+@media (min-width: 900px) { .navtoggle { display: none; } }
+
+/* THE ICON NAMES THE ACTION. Three lines fold into a cross: the top and bottom
+   rotate onto the middle's axis while the middle scales out from its centre. It
+   is driven off [aria-expanded], not a second class — the state is already in the
+   DOM for assistive tech, so adding a parallel class would give the same fact two
+   sources that can disagree.
+   transform-box: view-box makes the transform-origin resolve in viewBox units, so
+   10px 10px is the icon's true centre regardless of rendered size, and translateY
+   moves in the same units the lines were drawn in (y=6 and y=14 → 10). */
+.navicon__l {
+  stroke: currentColor; stroke-width: 1.6; stroke-linecap: round;
+  transform-box: view-box; transform-origin: 10px 10px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .navicon__l { transition: transform 260ms var(--ease-out), opacity 150ms var(--ease-out); }
+}
+[aria-expanded="true"] .navicon__l--t { transform: translateY(4px) rotate(45deg); }
+[aria-expanded="true"] .navicon__l--m { opacity: 0; transform: scaleX(.3); }
+[aria-expanded="true"] .navicon__l--b { transform: translateY(-4px) rotate(-45deg); }
+
+/* Below 520px the header CTA crowds the logo — it lives in the menu panel instead */
+@media (max-width: 519px) { .nav__actions > .btn { display: none; } }
+
+/* THE PANEL WIPES, IT DOES NOT APPEAR. This was the page's one state change with
+   no motion at all — display:none → block, popping open with nothing to say where
+   it came from. It is also the only one that had to be built without animating
+   layout: the panel lives inside the fixed header, so its height affects nothing
+   in the document, but `height: auto` still cannot be transitioned.
+
+   clip-path instead. The panel is always laid out and simply revealed downward
+   from its own top edge, which is the direction it arrives from — so the motion
+   describes the geometry rather than decorating it.
+
+   visibility, not display, for the closed state, and that is the accessibility
+   half: `display: none` cannot animate, but a merely transparent panel would keep
+   six links in the tab order and in the accessibility tree while invisible.
+   visibility removes them from both, and its transition is delayed by the wipe
+   duration on close so the panel stays rendered while it is closing — the same
+   trick the field uses to hand over from the blobs to the shader. */
+.navpanel {
+  display: block;
+  /* ABSOLUTE, AND THIS IS LOAD-BEARING, NOT TIDINESS. Keeping the panel in the
+     header's flow so it could animate grew the header's own box from 72px to
+     442px — and a fixed header is still a hit target across its whole box even
+     where it paints nothing, so `visibility: hidden` on the panel did not save it.
+     Measured with elementFromPoint: every point in the 370px band below the bar
+     returned header.nav, which on a phone is the hero's buttons made untappable.
+     Out of flow, the header's box is the bar again and the panel overflows it
+     visually without claiming any of the page. */
+  position: absolute; top: 100%; left: 0; right: 0;
+  background: #fff; border-top: 1px solid var(--color-border);
+  padding: var(--sp-2) var(--gutter) var(--sp-3);
+  clip-path: inset(0 0 100% 0);
+  visibility: hidden;
+  transition: clip-path 300ms var(--ease-out), visibility 0s linear 300ms;
+}
+.navpanel.is-open {
+  clip-path: inset(0 0 0 0);
+  visibility: visible;
+  transition: clip-path 380ms var(--ease-out), visibility 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .navpanel, .navpanel.is-open { transition: none; }
+}
+.navpanel a {
+  display: flex; align-items: center; min-height: 52px;
+  text-decoration: none; color: var(--color-ink); font-weight: 500;
+  border-bottom: 1px solid var(--color-border);
+}
+.navpanel .btn { width: 100%; margin-top: var(--sp-2); }
+/* !important, because the base rule now sets display:block rather than none. */
+@media (min-width: 900px) { .navpanel { display: none !important; } }
+
+/* ==========================================================================
+   6. APP SCREENSHOT PLACEHOLDERS
+      Deliberately empty. No product UI has been invented — each frame names
+      the exact screen the designer needs to supply.
+   ========================================================================== */
+/* Image wells, not cards. Square corners, flat fill, no shadow — so a frame
+   reads as a hole cut in the sheet rather than an object floating on it.
+   The dashed hairline is the placeholder tell and goes when the asset lands. */
+.shot {
+  position: relative; width: 100%;
+  border-radius: 0;
+  display: grid; place-items: center; text-align: center;
+  padding: var(--sp-4) var(--sp-3);
+  background: var(--color-surface);
+  border: 1px dashed #DCE1E9;
+}
+/* The hero frame is the one glass object on the page — it anchors the product
+   in the first viewport, so it keeps its fill, blur and depth. */
+.shot--onfield {
+  border-radius: var(--r-card);
+  background: rgba(255,255,255,.11);
+  border: 1.5px dashed rgba(255,255,255,.5);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: var(--shadow-frame), inset 0 1px 0 rgba(255,255,255,.28);
+}
+/* Real asset slot. Drops over the placeholder copy; if the file is missing the
+   script removes the image element and the labelled placeholder is what you
+   see, so the page never ships a broken frame either way. */
+.shot__img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top center;
+  border-radius: inherit;
+}
+.shot:has(.shot__img) { border-style: solid; }
+.shot:has(.shot__img) .shot__inner { display: none; }
+
+.shot__inner { display: grid; gap: .55rem; max-width: 34ch; }
+.shot__kicker { color: #7A8699; }
+.shot--onfield .shot__kicker { color: var(--on-field-soft); }
+.shot__name { font-size: 1rem; font-weight: 600; color: var(--color-ink); letter-spacing: -0.015em; }
+.shot--onfield .shot__name { color: #fff; }
+.shot__note { font-size: .8125rem; line-height: 1.5; color: var(--color-muted); }
+.shot--onfield .shot__note { color: var(--on-field-soft); }
+.shot--wide   { aspect-ratio: 16 / 10; }
+.shot--tall   { aspect-ratio: 4 / 5; }
+/* Stacked above the lg breakpoint, a full-width portrait frame swallows the
+   viewport — cap it so the hero copy keeps the weight. */
+@media (max-width: 1023px) { .shot--tall { max-width: 420px; margin-inline: auto; } }
+.shot--square { aspect-ratio: 1 / 1; }
+/* The rail's three frames take their ratio from --step-ratio, declared once on
+   :root, because it has to agree with the delivered assets in TWO places — here
+   and in the pinned layout, where the panel's WIDTH is derived from it. A literal
+   in both is a pair that silently drifts apart. The 5/4 fallback is the
+   placeholder shape for before the assets exist. */
+.shot--step   { aspect-ratio: var(--step-ratio, 5 / 4); }
+
+/* ==========================================================================
+   6a. THE STAGE — the hero's product frame, docked wide and dissolving out of
+       its own lower edge.
+
+   THE FADE IS AN ALPHA MASK, NOT A GRADIENT OVERLAY IN A FLAT COLOUR. That is
+   the whole difference: masked to transparency the frame dissolves into
+   whatever the field is actually doing behind it, so it keeps working while
+   the silk moves. An overlay would have to guess a single colour, and the
+   moment the field drifted the "fade" would read as a smear of the wrong navy.
+
+   What a mask cannot fix is a *busy* ground. A fold passing under the fade
+   edge makes the dissolve read as dirt rather than as depth. So the stage
+   carries a veil that deepens to solid --field-base exactly where the mask
+   runs out, and the section after it lifts the veil again: the field is
+   calmed for the length of the fade, then handed straight back. The deepening
+   is not a backdrop for the parallax — it IS the handoff. Remove it and the
+   effect doesn't get subtler, it gets grubby.
+
+   In Webflow: two sections with linear-gradient backgrounds, the frame in the
+   first, and a Scroll interaction on the frame in place of the view() timeline.
+   ========================================================================== */
+.stage {
+  position: relative;
+  padding-bottom: clamp(2.5rem, 6vw, 5rem);
+  /* THE PARALLAX LEAKS SIDEWAYS, and `overflow-x: clip` on <body> does not catch
+     it. stageDrift scales the frame to 1.035 at entry, and a transformed box
+     contributes to scrollable overflow: at 375px that is ~5.5px of horizontal
+     scroll the page should not have — the sideways wiggle you feel on a phone
+     rather than see. Measured by trying to scroll to x=200 and landing at 5.5.
+     Clipped here, at the one section that produces it, instead of on <html>:
+     overflow on the root propagates to the viewport, and that risks the sticky
+     pin in section 4 for a 5px problem two sections away.
+     x only. The vertical axis must stay visible — the veil reaches 34% above this
+     box and the frame's own drift translates it — and `clip` is the one overflow
+     value that may pair with `visible` on the other axis. */
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+/* The veil. Starts above the stage so the deepening has already begun under
+   the hero's last line, rather than switching on at a section boundary.
+
+   IT REACHES HIGHER THAN THE FADE NEEDS, and that is the difference between the
+   device sitting on the field and the device emerging from the dark. Sized only
+   to cover the mask, the deepening arrived under the stand: the monitor read as
+   an object placed on a lit field that happened to go dark at the very bottom.
+   Pulled up so the ground is already dark behind the middle of the screen, the
+   same mask reads as the device morphing out of the darker section — the dark is
+   something the device is coming out of rather than something below it.
+
+   The bright field is not lost, it is relocated: it now lives behind the hero
+   copy, where the page wants the life, and the product sits in the calm.
+
+   THE TWO NUMBERS THAT MATTER, both expressed against the frame:
+   · The device's top edge sits at ~0.35 alpha, not 0.6 and not 0.15. Too dark
+     and the device is merely inside the dark section; too light and it is an
+     object on a lit field with a shadow under it. At a third, the lit field is
+     still legible behind the top of the monitor and the ground has visibly
+     turned by the bottom — which is what "emerging" looks like.
+   · The veil is fully solid by 70% of the frame, and the mask does not start
+     fading until 78%. That ordering is the whole effect: the dissolve happens
+     entirely ON established dark, so the stand merges into a ground rather than
+     fading against a gradient. Invert it and the fade reads as a smudge.
+
+   THE REACH IS A PERCENTAGE, NOT vh, and that is a fix rather than a preference.
+   A percentage top inset resolves against the containing block's height — the
+   stage — so the deepening is locked to the frame it is deepening for, and both
+   numbers above hold at every viewport. In vh it was locked to the window
+   instead: the frame's height comes from its width, so on a short wide viewport
+   the reach shrank while the frame grew and the alpha at the device's top edge
+   drifted with the aspect ratio. Same look on a laptop and a tall monitor now. */
+.stage::before {
+  content: '';
+  position: absolute;
+  inset: -34% 0 0 0;
+  background: linear-gradient(180deg,
+    rgba(12, 21, 38, 0)    0%,
+    rgba(12, 21, 38, .34) 25%,
+    rgba(12, 21, 38, .62) 45%,
+    rgba(12, 21, 38, .90) 62%,
+    var(--field-base)     73%);
+  pointer-events: none;
+}
+
+/* Outgrowing the container is the point — a frame that stops at the same
+   1240px the paragraphs stop at is a card in a column, whatever else is done
+   to it. Above 1024px it goes edge to edge and becomes a window cut into the
+   page rather than an object placed on it. */
+.stage__frame {
+  position: relative;
+  z-index: 1;                     /* above the veil, not under it */
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+@media (min-width: 1024px) {
+  .stage__frame { padding-inline: 0; }
+}
+
+/* THE FADE IS VERTICAL ONLY, and the horizontal one that used to be here is
+   worth recording as a mistake: softening the left and right edges only makes
+   sense if those edges are off-screen. They aren't — the frame's own gutters
+   kept the image comfortably inside the viewport, so a 9% side ramp spent its
+   whole budget eating ~67px of actual screenshot on each side. Measured at a
+   1200px viewport it was visibly greying the first and last columns of the UI.
+   With the frame edge-to-edge above 1024px there is no side edge left to
+   soften, and below that a clean framed edge is the correct reading anyway.
+
+   THE FADE COVERS THE BOTTOM QUARTER OF THE IMAGE, and that is the deliberate
+   version of this decision rather than the cautious one. Measured on the trimmed
+   mockup: screen content ends at 77.6% of the image height, the monitor body ends
+   and the stand begins at 80.3%, the stand runs uncropped to the bottom edge.
+
+   Starting at 74% means the dissolve reaches up past the bezel and into the last
+   few percent of the screen, so the image *morphs* out of the dark instead of
+   being a crisply-edged monitor with a fading stand underneath it. A complete
+   object with a fade below it does not read as emerging from anything, which is
+   the note this replaces two rounds of veil tuning for: the veil was only ever
+   half the problem, because the image's own edge stayed hard.
+
+   What it costs, stated plainly: the bottom sliver of the screen is no longer at
+   full opacity. It lands at ~0.90 alpha, and the content there is the half-cut
+   "Liabilities" row that the mockup crops mid-row anyway — so the fade is
+   dissolving an awkward crop rather than hiding data. Everything that has to be
+   read (the parties, and the whole Current Combined Property Pool block, which
+   ends at 74%) is still untouched at full opacity. Pull the first stop below ~72%
+   and that stops being true.
+
+   Re-measure these if the asset is ever re-exported. They are the one part of
+   this file that is coupled to the pixels rather than to the layout. */
+/* The ordering that makes it work is in the veil above: it is solid dark by 70%
+   of the frame, before this fade starts at 74%, so the whole dissolve happens on
+   established ground rather than against a gradient.
+
+   The stops it replaces were full-to-46%, and they were written before the asset
+   existed — against a guess that a device mockup is mostly device. It isn't:
+   this one is 78% screen. At 46% the "Current Combined Property Pool" block sat
+   between 30% and 70% alpha, which meant the schedule of assets and liabilities
+   — the single thing the hero exists to show — was the most faded thing in the
+   frame. The brief in DESIGN.md that told the designer to keep everything
+   readable in the top 46% of the crop was asking for an impossible mockup.
+
+   Between those two extremes the dissolve now runs over the bottom 26% of the
+   frame: long enough to read as a dissolve rather than a cut, short enough that
+   it never touches the block the hero exists to show. */
+@supports (mask-image: linear-gradient(#000, transparent)) or (-webkit-mask-image: linear-gradient(#000, transparent)) {
+  .stage__frame {
+    --mask-v: linear-gradient(180deg,
+      #000 0%, #000 70%,
+      rgba(0,0,0,.58) 80%,
+      rgba(0,0,0,.22) 89%,
+      transparent 97%);
+    -webkit-mask-image: var(--mask-v);
+            mask-image: var(--mask-v);
+  }
+}
+
+/* Parallax, CSS-only. A scroll-driven view() timeline means no scroll
+   listener, no rAF, nothing to fall out of sync on resize — and where the
+   timeline isn't supported (Firefox today) the frame is simply static and the
+   mask still carries the whole effect. Positive translateY as the page
+   descends is what makes it lag: the frame travels slower than the document. */
+@keyframes stageDrift {
+  from { transform: translate3d(0, -3.2%, 0) scale(1.035); }
+  to   { transform: translate3d(0,  5.5%, 0) scale(1); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .stage__frame {
+      will-change: transform;
+      animation: stageDrift linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 82%;
+    }
+  }
+}
+
+/* The frame. It keeps the fill, blur and depth that made it the one elevated
+   object in the first viewport — but the radius is top-only and there is no
+   bottom border, because the bottom of this frame does not exist. The
+   box-shadow is masked along with everything else, so the depth fades out
+   with the image instead of outlining a rectangle that has dissolved. */
+.shot--stage {
+  aspect-ratio: 16 / 10;
+  border-radius: var(--r-card) var(--r-card) 0 0;
+  border: 1px dashed rgba(255,255,255,.42);
+  border-bottom: 0;
+  background: rgba(255,255,255,.075);
+  backdrop-filter: blur(12px) saturate(135%);
+  -webkit-backdrop-filter: blur(12px) saturate(135%);
+  box-shadow: var(--shadow-frame), inset 0 1px 0 rgba(255,255,255,.24);
+  overflow: hidden;
+  /* Placeholder copy is pushed into the un-faded top third — centred, it would
+     sit in the part of the frame the mask has already taken to 30% alpha. */
+  place-items: start center;
+  padding: clamp(1.75rem, 4.5vw, 3.25rem) var(--sp-3) 0;
+}
+.shot--stage .shot__kicker { color: var(--on-field-soft); }
+.shot--stage .shot__name   { color: #fff; }
+.shot--stage .shot__note   { color: var(--on-field-soft); }
+.shot--stage:has(.shot__img) { background: var(--field-deep); border-color: rgba(255,255,255,.16); }
+/* Edge to edge: the side borders and top corners are now off-screen, so
+   drawing them just puts a hairline down the first and last column of the
+   screenshot. Only the top edge still exists to be drawn. */
+@media (min-width: 1024px) {
+  .shot--stage {
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+}
+/* Portrait phones: a 16:10 frame that bleeds off the bottom leaves almost no
+   image above the fade. Squarer crop, shallower dock. */
+@media (max-width: 599px) { .shot--stage { aspect-ratio: 4 / 3.2; } }
+
+/* --- DEVICE MODE. The supplied asset is a monitor mockup on an empty ground,
+       not a raw screen capture, and those want opposite treatments.
+
+       A raw capture wants a WINDOW: full bleed, `cover`, the frame's own edge
+       doing the framing. A device mockup already contains its own frame, so the
+       window has to get out of the way entirely — otherwise there are two
+       frames, and `cover` crops the bezel it was drawn to show.
+
+       So in device mode the frame stops being an object: no fill, no border, no
+       backdrop blur, no shadow, no radius. It is a transparent area that an
+       image sits inside. The mask still runs, so the monitor's stand dissolves
+       into the still room rather than ending — which is the gesture from the
+       pinned reference, and the reason a stand is not a problem here.
+
+       NO DECLARED RATIO, AND NO `contain`. Both were mistakes of the same kind:
+       a frame with its own aspect-ratio has to agree with the asset's, and the
+       brief that asks for margins trimmed tight to the device is a brief that
+       changes the asset's ratio. Whichever way they disagree, `contain`
+       letterboxes — and letterbox inside this frame is dead height that pushes
+       the device up out of the fade, which is the exact failure the trimming was
+       supposed to prevent. So the image sits IN FLOW (`position: static`,
+       `height: auto`) and the frame's height simply *is* the image's height.
+       There is no ratio to keep in sync, no letterboxing possible, and no crop.
+
+       SCOPED TO :has(.shot__img). Device mode strips the fill, border, shadow
+       and padding, so applying it with no image left a transparent box with the
+       placeholder's label floating at the top of it — measured 658px of empty
+       navy at 1440x900. That is not the labelled placeholder the missing-asset
+       path promises, it is a hole. Unscoped, the one frame that most needed the
+       fallback was the only frame that didn't have one. --- */
+.shot--stage.is-device:has(.shot__img) {
+  aspect-ratio: auto;               /* the asset's own, whatever it is */
+  place-items: start stretch;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 0;
+  /* The device is a composed object, so it keeps a maximum size and stays
+     centred rather than stretching to the full bleed a raw capture wants. */
+  max-width: 1180px;
+  margin-inline: auto;
+}
+.shot--stage.is-device:has(.shot__img) .shot__img {
+  position: static;
+  width: 100%;
+  height: auto;
+}
+
+/* ==========================================================================
+   6b. THE STILL ROOM — where the product frame's fade lands, held.
+
+   The stage's mask needs a calm ground to dissolve into. The first build made
+   that a passing shade: deepen to solid, then lift straight back out. It read
+   as a lighting artefact, because a ground that exists for 200px is not a
+   ground, it is a gradient.
+
+   Held instead, it becomes the page's second idea. You fall out of the moving
+   field into a room that is completely still, the problem is stated there on
+   solid ground, and the field — movement, life — only returns when the product
+   does. The still ground is the same colour as the footer, so the page has two
+   grounds of one colour: one alive, one not. The argument is made on the one
+   that isn't.
+
+   This is a deliberate amendment to "one continuous field". The page now runs
+   field → still navy → field → white sheet → field → footer. It is still one
+   *colour* throughout the dark passages; what changes is whether it moves.
+   ========================================================================== */
+.still {
+  position: relative;
+  background: var(--field-base);
+}
+/* Three text tiers are available in here and nowhere else on dark ground:
+   --on-field-faint measures 7.35:1 against solid --field-base, where against the
+   live field it measured 2.7:1. See the colour rules. */
+
+/* The lift back out. A background gradient rather than an overlay pseudo, so it
+   sits behind the section's own content without any stacking work — and sized
+   in px rather than %, because this section contains the pinned rail's spacer
+   and is several viewports tall. A percentage stop would stretch the handover
+   over the whole rail. */
+.still-exit {
+  background-image: linear-gradient(180deg,
+    var(--field-base)      0%,
+    rgba(12, 21, 38, .70) 34%,
+    rgba(12, 21, 38, .28) 64%,
+    rgba(12, 21, 38, 0)  100%);
+  background-repeat: no-repeat;
+  background-size: 100% clamp(9rem, 24vh, 18rem);
+}
+
+/* ==========================================================================
+   7. COMPONENT BITS
+   ========================================================================== */
+.rule-list { display: grid; }
+.rule-list > * { padding-block: 1.15rem; border-top: 1px solid var(--color-border); }
+.rule-list > *:last-child { border-bottom: 1px solid var(--color-border); }
+
+/* --- Section 4: the pinned rail.
+       The page's one authored scroll event. The section pins to the viewport
+       and the three steps travel sideways as you keep scrolling down — the
+       vertical gesture is converted into horizontal movement, then handed back.
+       This is the moment the page stops being a document and behaves.
+
+       TWO MODES, and the base one is the honest one:
+
+       · BASE — a native overflow-x rail with scroll-snap. Drag it, flick it,
+         arrow-key it. Works with no JS, under reduced motion, and on any
+         screen too small or short to pin against. Nothing is lost.
+       · PINNED — JS adds .is-pinned above 900×620 when motion is allowed. It
+         measures the track, gives the spacer the height the horizontal travel
+         needs, and drives translateX off scroll position. Native scrolling on
+         the rail is switched off because JS owns the axis.
+
+       The base mode is not a fallback bolted on afterwards; it is what the
+       markup does on its own. Pinning is added on top and can be removed at
+       any width without leaving a hole.
+
+       In Webflow: section → spacer div (height set by code) → sticky child at
+       100vh → the rail. Drive `transform` from a Scroll interaction, or paste
+       the block from the <script> below into an embed. --- */
+.hscroll__stage { position: relative; }
+
+.is-pinned .hscroll__stage {
+  position: sticky; top: 0;
+  height: 100vh; height: 100svh;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  /* Top padding clears the 72px fixed nav — the stage is pinned at top: 0, so
+     without it the kicker sits under the nav sheet for the whole section. */
+  padding-block: clamp(6.5rem, 13vh, 9rem) clamp(1.5rem, 4vh, 3rem);
+}
+.is-pinned .rail {
+  /* JS owns the horizontal axis here, so the native scroller stands down. */
+  overflow: visible;
+  width: max-content;
+  scroll-snap-type: none;
+  flex: 1 1 auto; min-height: 0;
+  padding-block: 0;
+  will-change: transform;
+}
+/* Pinned, a step is a wide slide, not a narrow tile: copy on the left, the
+   screenshot beside it at full stage height. Stacked tiles would fit three-up
+   on a desktop screen, which leaves nothing to travel — the section would pin
+   for a whole viewport and give back 90px of movement. Laid out sideways the
+   rail runs to roughly twice the viewport, so the scroll buys real distance.
+   Panel width is not set: it falls out of the shot's ratio against the available
+   height, so the frames stay correctly proportioned at any viewport. */
+.is-pinned .rail__item {
+  flex: 0 0 auto;
+  flex-direction: row;
+  align-items: stretch;
+  gap: clamp(1.25rem, 2.2vw, 2.25rem);
+}
+.is-pinned .rail__body {
+  flex: 0 0 clamp(240px, 21vw, 320px);
+  display: flex; flex-direction: column;
+}
+.is-pinned .rail__item .shot {
+  flex: 0 0 auto;
+  height: 100%; width: auto;
+  aspect-ratio: var(--step-ratio, 5 / 4);
+  margin-top: 0;
+}
+
+/* Progress hairline. Only shown when pinned — it is the affordance that tells
+   you the section is a scroll event rather than a static row. */
+.railprog { display: none; }
+.is-pinned .railprog {
+  display: block; position: relative; overflow: hidden;
+  height: 2px; border-radius: 2px;
+  background: rgba(255,255,255,.18);
+  margin-top: var(--sp-3);
+}
+.railprog i {
+  position: absolute; inset: 0;
+  background: #fff; border-radius: 2px;
+  transform-origin: left center;
+  transform: scaleX(0);
+  /* No transition — this is repainted every frame from scroll position. */
+}
+
+/* --- The rail itself. No background of its own: the steps run sideways
+       directly on the gradient. Full-bleed to the right edge so the track
+       visibly continues past the viewport. --- */
+.rail {
+  display: flex;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline-start: var(--rail-pad);
+  padding-inline: var(--rail-pad) var(--gutter);
+  padding-block: var(--sp-1) var(--sp-2);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.rail::-webkit-scrollbar { display: none; }
+.rail:focus-visible { outline: 2px solid #fff; outline-offset: 6px; border-radius: 4px; }
+
+.rail__item {
+  flex: 0 0 clamp(258px, 74vw, 402px);
+  scroll-snap-align: start;
+  display: flex; flex-direction: column;
+}
+.rail__item .shot { margin-top: auto; }
+/* The rail has no background of its own, so neither do its frames — a glass
+   panel here would turn the three steps back into three cards. */
+.rail .shot--onfield {
+  background: none;
+  border-radius: 0;
+  border: 1px dashed rgba(255,255,255,.32);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  box-shadow: none;
+}
+/* No border at all once the photograph is in. The dashed line is the placeholder
+   tell, and the global `:has(.shot__img)` rule turns it solid rather than off —
+   which on the rail would draw a hairline around an opaque photo that already has
+   a hard edge of its own. Square corners stay: a rail frame is a hole cut in the
+   field, not a card, and that reading is what keeps three photographs from
+   becoming three cards. */
+.rail .shot--onfield:has(.shot__img) { border: 0; }
+
+.rail__num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.42);
+  background: rgba(255,255,255,.08);
+  color: #fff; font-size: .875rem; font-weight: 700; letter-spacing: 0;
+  flex: none;
+}
+
+.railbtn {
+  width: 48px; height: 48px; border-radius: 50%; flex: none;
+  display: grid; place-items: center; cursor: pointer;
+  border: 1px solid rgba(255,255,255,.4);
+  background: rgba(255,255,255,.06); color: #fff;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              opacity var(--dur-fast) var(--ease-out);
+}
+.railbtn:hover:not(:disabled) { background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.75); }
+.railbtn:disabled { opacity: .28; cursor: default; }
+
+/* --- KNOCKOUT — the page's one visual device, used twice.
+       The type is cut out of a white sheet so the live gradient reads through
+       the letterforms. Used once to open the white run (section 5) and once to
+       close the page (section 9), so it reads as a system, not a trick.
+
+       This only works because .page creates no stacking context and .field
+       sits at z-index -1 — do not add transform, opacity or filter to any
+       ancestor of .knockout.
+
+       Display sizes only. At kicker or body size the letterforms are too thin
+       to survive the blend, and a cut-out letter can land on a light part of
+       the field where small text would fall under 4.5:1. --- */
+.cta-band { position: relative; }
+.knockout {
+  background: #fff;
+  mix-blend-mode: lighten;
+  padding-block: clamp(4.5rem, 10vw, 8rem) clamp(1.25rem, 2.5vw, 1.75rem);
+}
+.knockout h2 { color: #000; }          /* pure black only — mid tones smear */
+.knockout-foot { background: #fff; padding-bottom: clamp(4.5rem, 10vw, 8rem); }
+
+/* Opening variant: the white sheet starts here and runs on, uninterrupted,
+   into .white-run below. Bottom padding is 0 so the two sheets are one sheet;
+   the following section carries the gap. */
+.knockout--lead {
+  padding-block: clamp(4.25rem, 9vw, 7.5rem) 0;
+}
+.knockout--lead h2 {
+  font-size: clamp(2.15rem, 5.4vw, 4.25rem);
+  line-height: 1.04;
+  letter-spacing: var(--tr-display);
+  max-width: 20ch;
+}
+
+@supports not (mix-blend-mode: lighten) {
+  .knockout { mix-blend-mode: normal; }
+  .knockout h2 { color: var(--color-ink); }
+}
+@media (forced-colors: active) {
+  .knockout { mix-blend-mode: normal; }
+  .knockout h2 { color: CanvasText; }
+}
+
+/* --- Section 7: the price card. The one card on the page, and the one place
+       a card is right — what is being lifted off the ground is the thing you
+       are being asked to buy. It is not licence for a second one.
+
+       THE CARD IS THREE PIECES, and it has to be.
+       The $44 is a knockout — the third use of the page's one device — so the
+       live field reads through the figures. A blend mode composites against
+       whatever is painted beneath it, so if the card painted its own white fill
+       behind the price, `lighten` would resolve black against white and the
+       numerals would simply disappear. The card therefore paints NO background
+       of its own: two white sheets sit above and below, and the price band
+       between them is the only thing over the field.
+
+       The wrapper still carries the radius and the shadow. An outer box-shadow
+       is clipped to outside the border box, so it never lands in the blend's
+       backdrop — the card keeps its depth and the cutout still works.
+
+       Blending the whole card instead would have been simpler and wrong: with
+       `lighten` every shadow darker than the field is erased, so the card would
+       lose the elevation that makes it a card at all.
+
+       All three pieces are pure #fff. `lighten` against a dark field leaves
+       white exactly white, so the seams are invisible. --- */
+.pricecard {
+  background: transparent;               /* see above — must not paint white */
+  border-radius: var(--r-slab);
+  box-shadow: var(--shadow-slab);
+  overflow: hidden;                      /* clips the square sheets to the radius */
+  max-width: 480px; margin-inline: auto; text-align: center;
+}
+.pricecard__sheet {
+  background: #fff;
+  padding-inline: clamp(2rem, 4vw, 3.25rem);
+}
+.pricecard__sheet--top    { padding-top: clamp(2rem, 4vw, 3.25rem); }
+.pricecard__sheet--bottom { padding-bottom: clamp(2rem, 4vw, 3.25rem); padding-top: .85rem; }
+
+/* THE PIECES MUST OVERLAP BY 1px. Do not remove these negative margins.
+   Because the card paints no background of its own, the three pieces meet over
+   raw transparency. Their edges land on fractional device pixels (the card is
+   centred, and the paddings are clamp()-derived), so both boxes antialias the
+   shared boundary and the two partial alphas do not sum to 1 — the dark field
+   leaks through the shortfall as a hairline. It is invisible at 1:1 on some
+   displays and obvious at 2x zoom, which is exactly how it gets shipped.
+   A 1px overlap puts opaque white on both sides of every junction: the band
+   covers the top sheet's edge, the bottom sheet covers the band's. */
+.pricecut                 { margin-top: -1px; }
+.pricecard__sheet--bottom { margin-top: -1px; }
+
+.pricecut {
+  background: #fff;
+  mix-blend-mode: lighten;
+  padding-block: 1rem .25rem;
+}
+.price {
+  font-size: clamp(3.5rem, 8vw, 5rem); font-weight: 700;
+  letter-spacing: -0.045em; line-height: 1;
+  color: #000;                           /* pure black only — mid tones smear */
+}
+@supports not (mix-blend-mode: lighten) {
+  .pricecut { mix-blend-mode: normal; }
+  .price { color: var(--color-ink); }
+}
+@media (forced-colors: active) {
+  .pricecut { mix-blend-mode: normal; }
+  .price { color: CanvasText; }
+}
+
+.check { flex: none; width: 20px; height: 20px; margin-top: .28rem; color: var(--color-accent); }
+
+/* --- Full-bleed frames. Above lg, a feature image runs off the viewport edge
+       instead of stopping at the container — the single most direct way to stop
+       five stacked screenshots reading as five stacked cards.
+       --rail-pad is *almost* exactly the distance from viewport edge to container
+       edge, and the gap between almost and exactly is the classic 100vw trap:
+       100vw includes the classic scrollbar, the layout width does not. Measured at
+       a 1280px window with a 15px scrollbar, --rail-pad resolves to 71.2px against
+       a true distance of 64.2px, so each bleeding row overshoots the layout by ~8px
+       and the page gains that much horizontal scroll.
+       The overshoot is CLIPPED rather than corrected, because the intent is "flush
+       to the edge" and an overshoot that is clipped is flush; there is no pure-CSS
+       unit for the viewport minus its scrollbar, and the alternative is rebuilding
+       every container as a full-bleed grid for 8px. In the Webflow rebuild, prefer
+       a full-bleed grid over a vw calculation and this disappears. --- */
+@media (min-width: 1024px) {
+  .bleed-right { margin-right: calc(-1 * var(--rail-pad)); }
+  .bleed-left  { margin-left:  calc(-1 * var(--rail-pad)); }
+}
+/* Clips the bleed overshoot above. x only, so nothing vertical is affected. */
+#features { overflow-x: clip; overflow-y: visible; }
+
+.footer { background: var(--field-base); color: var(--on-field-soft); }
+/* inline-flex with a min-height, because as plain inline links these were 18px
+   tall — under the 24px floor of WCAG 2.2 SC 2.5.8, and a genuinely small target
+   on a phone. The nav links already had padding for this reason; the footer set
+   was missed. inline-flex keeps them on their own line in the column lists while
+   giving the box a real height, and align-items keeps the text optically where it
+   was so nothing in the footer moves. */
+.footer a {
+  display: inline-flex; align-items: center; min-height: 28px;
+  text-decoration: none; color: var(--on-field-soft);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.footer a:hover { color: #fff; }
+
+/* ==========================================================================
+   9. SCROLL REVEAL — for SETS ONLY, and that restriction is the whole rule.
+
+   This was on 19 elements: every section heading, most paragraphs, all three
+   feature rows. The comment here claimed "applied sparingly" while the markup
+   did the opposite, and the result is the failure mode that reads as a template
+   rather than as authorship — the same fade-and-rise arriving on everything you
+   scroll past, which makes the page's two genuinely authored moments (the stage
+   dissolving into the still room, and the rail converting vertical scroll into
+   horizontal travel) just two more things that moved.
+
+   It now runs on exactly two groups, both of which are lists that arrive as
+   lists and stagger for that reason: the three ways a settlement gets stuck, and
+   the two sides of the table. Five elements. Everywhere else content is simply
+   there, which against a field that is already moving reads as composure.
+
+   Faster and shorter than before, too: 900ms over 20px was a slide, and at that
+   length a stagger of three finishes nearly a second and a half after the first
+   one starts. 520ms over 12px is a settle.
+
+   Content is visible by default. `.js-motion` is added by script only when
+   IntersectionObserver exists AND motion is allowed, so no-JS and reduced-motion
+   never reach the hiding rule at all.
+   ========================================================================== */
+.js-motion [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  transition: opacity 520ms var(--ease-out),
+              transform 520ms var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js-motion [data-reveal].is-in { opacity: 1; transform: none; }
+
+/* Hero entrance: plays once on load, independent of the observer so the first
+   viewport is never caught mid-transition. */
+@keyframes heroIn { from { opacity: 0; transform: translate3d(0, 26px, 0); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  [data-enter] { animation: heroIn 760ms var(--ease-out) both; animation-delay: var(--enter-delay, 0ms); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ==========================================================================
+     THE FIELD — fixed moving gradient behind the entire page.
+     In Webflow: one HTML embed at the top of <body>, plus the CSS above.
+     ========================================================================== -->
+<div class="field" id="field" aria-hidden="true">
+  <div class="field__blob field__blob--b"></div>
+  <div class="field__blob field__blob--a"></div>
+  <div class="field__blob field__blob--d"></div>
+  <div class="field__blob field__blob--c"></div>
+  <div class="field__blob field__blob--e"></div>
+  <!-- The silk shader. Paints over the blobs above once WebGL is confirmed
+       working; if it isn't, this stays invisible and the blobs run the field. -->
+  <canvas class="field__gl" id="field-gl"></canvas>
+  <!-- Grain sits above the canvas: it is what keeps a very smooth, very dark
+       gradient from banding on a large panel. -->
+  <div class="field__grain"></div>
+</div>
+
+<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:z-[80] focus:top-4 focus:left-4 focus:bg-white focus:text-ink focus:px-4 focus:py-3 focus:rounded-xl focus:font-semibold">Skip to content</a>
+
+<div class="page">
+
+<!-- ==========================================================================
+     Section 0: Nav
+     ========================================================================== -->
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="#top" class="logo" aria-label="Lex Settle — home">
+      <!-- PLACEHOLDER MARK — replace once a brand kit is confirmed -->
+      <!-- alt="" on both: the anchor already carries aria-label="Lex Settle —
+           home", so alt text here would announce the brand twice. Two images,
+           one ground each — see § Logo for why this is not one currentColor file. -->
+      <img class="logo__img logo__img--light" src="assets/logoWordmarkWhite.svg" alt="" width="142" height="41">
+      <img class="logo__img logo__img--dark" src="assets/logoWordmarkColour.svg" alt="" width="142" height="41">
+    </a>
+
+    <nav class="nav__links" aria-label="Primary">
+      <a class="nav__link" href="#how-it-works">How it works</a>
+      <a class="nav__link" href="#features">Features</a>
+      <a class="nav__link" href="#who-its-for">Who it's for</a>
+      <a class="nav__link" href="#pricing">Pricing</a>
+    </nav>
+
+    <div class="nav__actions">
+      <a class="nav__signin" href="#">Sign in</a>
+      <a class="btn btn--light" href="#pricing">Get started</a>
+      <button class="navtoggle" id="navtoggle" aria-expanded="false" aria-controls="navpanel" aria-label="Open menu">
+        <!-- Three separate lines rather than one path, so each can be transformed
+             independently into the close mark. See .navicon__l. -->
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <line class="navicon__l navicon__l--t" x1="3" y1="6"  x2="17" y2="6"/>
+          <line class="navicon__l navicon__l--m" x1="3" y1="10" x2="17" y2="10"/>
+          <line class="navicon__l navicon__l--b" x1="3" y1="14" x2="17" y2="14"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="navpanel" id="navpanel">
+    <a href="#how-it-works">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#who-its-for">Who it's for</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#">Sign in</a>
+    <a class="btn btn--primary" href="#pricing">Get started</a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ==========================================================================
+     Section 1: Hero
+     ========================================================================== -->
+<section class="on-field" id="top" style="padding-top: clamp(7rem, 12vw, 9.5rem); padding-bottom: clamp(2.5rem, 5vw, 4rem);">
+  <div class="wrap">
+    <!-- CENTRED ON THE DEVICE, and the axis is the reason rather than the taste.
+         This copy was left-set and asymmetric on the argument that centring it
+         trades an editorial voice for the generic hero — which held while the
+         product sat in a right-hand column. It stopped holding when the stage
+         replaced that column with a centred 1180px device directly underneath:
+         left-set copy over a centred object gives the first viewport two
+         competing axes, and the eye reads that as a mistake rather than as
+         asymmetry. One axis, shared with the device, is the coherent version.
+
+         The block is 60rem inside a 1112px container against the device's 1180px,
+         so both are centred on the same line and the copy is narrower than the
+         thing it sits over. That relationship is what makes it read as a caption
+         to the product rather than as a banner. -->
+    <div style="max-width: 60rem; margin-inline: auto; text-align: center;">
+      <h1 class="display" data-enter>
+        Calculate your property pool.<br class="hidden sm:block"> Agree on the split.
+      </h1>
+
+      <!-- mx-auto, because .lead caps its own measure: without it the paragraph
+           keeps that narrower box but pins it to the left edge of a centred
+           block, which reads as a bug rather than as a layout. -->
+      <p class="lead mt-7 mx-auto" style="color: var(--on-field-soft); --enter-delay:90ms" data-enter>
+        Lex Settle helps separating parties, solicitors and mediators build a clear schedule
+        of assets and liabilities, propose a settlement, and negotiate it in one place.
+      </p>
+
+      <div class="cta-row flex flex-wrap justify-center gap-3 mt-9" style="--enter-delay:180ms" data-enter>
+        <a class="btn btn--light btn--lg" href="#pricing">Get started</a>
+        <a class="btn btn--ghost btn--lg" href="#how-it-works">See how it works</a>
+      </div>
+
+      <p class="small mt-6" style="color: var(--on-field-soft); --enter-delay:250ms" data-enter>
+        <span class="tnum">$44</span> per matter, includes GST. No subscription.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     Section 1b: The stage — the product, docked wide and dissolving downward.
+     The frame bleeds past the container and off its own lower edge; the field
+     deepens to solid navy underneath the fade and lifts again in section 2.
+     See "6a. THE STAGE" in the CSS for why the fade is a mask and not an
+     overlay, and why the deepening is load-bearing rather than decorative.
+     ========================================================================== -->
+<section class="stage" aria-label="The Lex Settle app">
+  <div class="stage__frame">
+    <!-- ASSET — assets/hero-net-pool.webp
+         The supplied monitor mockup of the Smith Family matter overview.
+         MUST BE SAVED WITH A TRANSPARENT BACKGROUND: the frame draws no fill in
+         device mode, so a white matte around the monitor would land as a white
+         slab in the middle of the navy. Trim the empty margins tight to the
+         device — the surrounding whitespace is dead height, and the top margin
+         in particular shrinks the device for nothing. The stand can stay; the
+         mask dissolves it. Save at 2× (roughly 2360px wide).
+
+         width/height MUST match the delivered file's real pixel size. The frame
+         takes its height from this image now, so these attributes are what
+         reserves the space before it loads — wrong numbers here are a layout
+         shift on the largest element on the page. No ratio is assumed anywhere
+         else, so any ratio is fine as long as these two agree with the file. -->
+    <div class="shot shot--stage is-device">
+      <img class="shot__img" src="assets/hero-net-pool.webp" alt="The Lex Settle matter overview for the Smith Family matter, showing the parties and the current combined property pool with its schedule of assets and liabilities." width="2360" height="1708" fetchpriority="high" decoding="async">
+      <div class="shot__inner">
+        <span class="label shot__kicker">App screenshot</span>
+        <span class="shot__name">Net property pool / matter overview</span>
+        <span class="shot__note">Save the supplied monitor mockup to <code>assets/hero-net-pool.webp</code> — transparent background, margins trimmed tight to the device, 2×. The lower edge of this frame fades out, so the stand will dissolve rather than end.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     Section 2: Audience strip
+     ========================================================================== -->
+<section class="on-field still" style="padding-block: clamp(3.5rem, 7vw, 5.5rem);" aria-label="Who Lex Settle is built for">
+  <div class="wrap">
+    <div class="border-y" style="border-color: rgba(255,255,255,.16);">
+      <p class="label py-6 text-center" style="color: var(--on-field-faint);">
+        Built for separated parties &nbsp;·&nbsp; Solicitors &nbsp;·&nbsp; Mediators
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     Section 3: The problem
+     On the field. Large white type, hairline columns — no card.
+     ========================================================================== -->
+<section class="on-field still" aria-labelledby="problem-h">
+  <div class="wrap">
+    <h2 class="h2 max-w-4xl" id="problem-h">Property settlements get stuck in spreadsheets.</h2>
+
+    <div class="grid md:grid-cols-3 gap-x-10 gap-y-9" style="margin-top: var(--sp-6);">
+      <p class="ruled h3" data-reveal>Two parties keep two versions of the same schedule, emailed back and forth.</p>
+      <p class="ruled h3" data-reveal style="--reveal-delay:90ms">Values, ownership and valuation dates sit across separate documents.</p>
+      <p class="ruled h3" data-reveal style="--reveal-delay:180ms">It's hard to see which items are in dispute — and which are settled.</p>
+    </div>
+
+    <p class="measure" style="margin-top: var(--sp-6);">
+      Lex Settle keeps the schedule in one shared place, so there is less manual
+      reconciliation and fewer transcription errors between versions.
+    </p>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     Section 4: How it works — THE PINNED RAIL
+     The section sticks to the viewport and the three steps travel sideways as
+     you keep scrolling down. #rail-track is a spacer whose height JS sets to
+     the horizontal travel distance; #rail-stage is what pins inside it.
+     Without JS this is a plain horizontal-scroll rail and reads correctly.
+     ========================================================================== -->
+<section class="on-field still-exit" id="how-it-works" aria-labelledby="how-h" style="padding-bottom: clamp(3rem, 7vw, 6rem);">
+ <div class="hscroll__track" id="rail-track">
+  <div class="hscroll__stage" id="rail-stage">
+
+  <div class="wrap">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <div class="max-w-2xl">
+        <p class="label" style="color: var(--on-field-soft);">How it works</p>
+        <h2 class="h2 mt-4" id="how-h">Three steps, from first schedule to signed-off split.</h2>
+      </div>
+
+      <div class="flex gap-3">
+        <button class="railbtn" id="rail-prev" aria-label="Previous step">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M11 3.5L5.5 9l5.5 5.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="railbtn" id="rail-next" aria-label="Next step">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M7 3.5L12.5 9 7 14.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="railprog"><i id="rail-bar"></i></div>
+  </div>
+
+  <ol class="rail list-none m-0" id="rail" style="margin-top: var(--sp-5);"
+      tabindex="0" role="group" aria-label="How it works — scroll sideways through three steps">
+
+    <!-- Step 1 -->
+    <li class="rail__item ruled">
+      <div class="rail__body">
+        <span class="rail__num">1</span>
+        <h3 class="h3 mt-5" style="color: var(--on-field);">Build the pool</h3>
+        <p class="mt-3 mb-7">
+          Enter every asset and liability, flag each as jointly or individually held, and record
+          a valuation date or estimate. Lex Settle produces a downloadable schedule and the net
+          property pool.
+        </p>
+      </div>
+      <!-- ASSET — assets/buildthepool.webp (step 1 of 3, ordered by filename).
+           JPEG, not PNG: these are photographs, and the delivered 5120x3558 PNGs
+           were 14-16MB each. Lazy, because the whole rail is below the fold. -->
+      <div class="shot shot--onfield shot--step">
+        <img class="shot__img" src="assets/buildthepool.webp" alt="A laptop on a desk showing the Lex Settle assets table for the Smith Family matter, with each asset's holder, value and valuation date." width="1800" height="1251" loading="lazy" decoding="async">
+        <div class="shot__inner">
+          <span class="label shot__kicker">App screenshot</span>
+          <span class="shot__name">Schedule of assets &amp; liabilities</span>
+          <span class="shot__note">Cropped to the entry table with the running net pool visible.</span>
+        </div>
+      </div>
+    </li>
+
+    <!-- Step 2 -->
+    <li class="rail__item ruled">
+      <div class="rail__body">
+        <span class="rail__num">2</span>
+        <h3 class="h3 mt-5" style="color: var(--on-field);">Propose a split</h3>
+        <p class="mt-3 mb-7">
+          Choose which assets and liabilities each party retains, then set the split with a slider
+          or type a percentage. Values update as you move it.
+        </p>
+      </div>
+      <!-- ASSET — assets/proposeSplit.webp (step 2 of 3) -->
+      <div class="shot shot--onfield shot--step">
+        <img class="shot__img" src="assets/proposeSplit.webp" alt="A laptop on a desk showing a proposed schedule in Lex Settle, with each asset split between the two parties by percentage sliders." width="1800" height="1251" loading="lazy" decoding="async">
+        <div class="shot__inner">
+          <span class="label shot__kicker">App screenshot</span>
+          <span class="shot__name">Proposal &amp; split slider</span>
+          <span class="shot__note">Cropped to the slider with both parties' totals in frame.</span>
+        </div>
+      </div>
+    </li>
+
+    <!-- Step 3 -->
+    <li class="rail__item ruled">
+      <div class="rail__body">
+        <span class="rail__num">3</span>
+        <h3 class="h3 mt-5" style="color: var(--on-field);">Share and negotiate</h3>
+        <p class="mt-3 mb-7">
+          Send the proposal to the other party. They agree, disagree or comment on each item,
+          so the contentious issues stand out instead of being buried in a document.
+        </p>
+      </div>
+      <!-- ASSET — assets/shareandnegotiate.webp (step 3 of 3).
+           NOTE: this mockup has a compositing fault — the screen's contents bleed
+           down onto the laptop's keyboard and body, and there is a green sliver at
+           the bottom edge. See assets/README.md. It is wired in as delivered
+           rather than cropped around, because cropping it out would take the
+           agree/disagree controls with it. -->
+      <div class="shot shot--onfield shot--step">
+        <img class="shot__img" src="assets/shareandnegotiate.webp" alt="A laptop on a desk showing a shared proposal in Lex Settle, with agree and disagree controls on each line item and a comment thread beside them." width="1800" height="1251" loading="lazy" decoding="async">
+        <div class="shot__inner">
+          <span class="label shot__kicker">App screenshot</span>
+          <span class="shot__name">Other-party response screen</span>
+          <span class="shot__note">Cropped to the agree / disagree / comment controls on line items.</span>
+        </div>
+      </div>
+    </li>
+
+  </ol>
+
+  </div><!-- /hscroll__stage -->
+ </div><!-- /hscroll__track -->
+</section>
+
+<!-- ==========================================================================
+     THE WHITE RUN — one continuous full-bleed sheet.
+     It ARRIVES as a knockout: the sheet opens on a cut-out headline with the
+     live gradient reading through the letters, then settles into the vertical
+     scroll below. Sections 5 and 6 share the sheet, divided by a hairline.
+     This is the page's single white region; everything else sits on the field.
+     In Webflow: a div with background #fff and Blend mode "Lighten", black type,
+     sitting directly above the white section — no wrapper between them.
+     ========================================================================== -->
+<div class="knockout knockout--lead">
+  <div class="wrap">
+    <h2 id="features-h">Everything the matter needs, in one place.</h2>
+  </div>
+</div>
+
+<div class="white-run">
+
+  <!-- ========================================================================
+       Section 5: Features
+       Heading lives in the knockout above (referenced by aria-labelledby), so
+       the sheet opens on the cut-out line rather than repeating it in ink.
+       ======================================================================== -->
+  <section id="features" class="is-after-knockout" aria-labelledby="features-h">
+    <div class="wrap">
+
+      <div class="grid gap-y-20">
+
+        <!-- 5.1 Schedule builder -->
+        <div class="grid lg:grid-cols-12 gap-x-12 gap-y-8 items-center">
+          <div class="lg:col-span-5">
+            <h3 class="h3">Schedule builder</h3>
+            <p class="mt-4 measure">
+              Add every asset and liability with its value, ownership flag and valuation date or
+              estimate. The net property pool is calculated for you as the schedule grows.
+            </p>
+          </div>
+          <div class="lg:col-span-7 bleed-right">
+            <!-- ASSET — assets/scheduleBuilder.webp
+                 CROPPED, unlike the hero and the rail. The asset is 1.439:1 and
+                 this frame is 16:10, so `cover` takes ~5% off the top and bottom.
+                 That is safe here and it was not there: the hero is a device on a
+                 transparent ground where a crop would cut the bezel, whereas this
+                 is a photograph with generous wall above and desk below. Keeping
+                 16:10 also holds the five rows of this section to one rhythm —
+                 re-rating the frames per asset would step the heights of a stack
+                 whose whole effect is regularity. -->
+            <div class="shot shot--wide">
+              <img class="shot__img" src="assets/scheduleBuilder.webp" alt="The Lex Settle asset entry form on a desktop monitor, with fields for asset type, name, owner, value, whether the value is an estimate, and the date valued." width="1700" height="1182" loading="lazy" decoding="async">
+              <div class="shot__inner">
+                <span class="label shot__kicker">App screenshot</span>
+                <span class="shot__name">Schedule of assets &amp; liabilities — full view</span>
+                <span class="shot__note">Wide 16:10 crop including column headers and totals row.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5.2 Proposal & slider -->
+        <div class="grid lg:grid-cols-12 gap-x-12 gap-y-8 items-center">
+          <div class="lg:col-span-5 lg:order-2">
+            <h3 class="h3">Proposal and split slider</h3>
+            <p class="mt-4 measure">
+              Allocate items to each party and set the percentage split by slider or by typing a
+              figure. Both sides of the proposal update together, so the effect of a change is
+              visible straight away.
+            </p>
+          </div>
+          <div class="lg:col-span-7 lg:order-1 bleed-left">
+            <!-- ASSET — assets/splitSlider.webp -->
+            <div class="shot shot--wide">
+              <img class="shot__img" src="assets/splitSlider.webp" alt="A single asset in Lex Settle split fifty-fifty between two parties, with a slider setting the percentage and each party's share shown either side of the valuation." width="1700" height="1182" loading="lazy" decoding="async">
+              <div class="shot__inner">
+                <span class="label shot__kicker">App screenshot</span>
+                <span class="shot__name">Proposal builder with split slider</span>
+                <span class="shot__note">Wide 16:10 crop, slider mid-drag if possible.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5.3 Sharing -->
+        <div class="grid lg:grid-cols-12 gap-x-12 gap-y-8 items-center">
+          <div class="lg:col-span-5">
+            <h3 class="h3">Share the offer</h3>
+            <p class="mt-4 measure">
+              Send the proposal to the other party for review from inside the matter. No exporting,
+              re-attaching or chasing the latest version.
+            </p>
+          </div>
+          <div class="lg:col-span-7 bleed-right">
+            <!-- ASSET — assets/shareProposal.webp -->
+            <div class="shot shot--wide">
+              <img class="shot__img" src="assets/shareProposal.webp" alt="The Create New Proposal dialog in Lex Settle, choosing a reviewer, allowing comments on the proposal, and optionally setting a password before sending." width="1700" height="1182" loading="lazy" decoding="async">
+              <div class="shot__inner">
+                <span class="label shot__kicker">App screenshot</span>
+                <span class="shot__name">Share / send proposal step</span>
+                <span class="shot__note">Wide 16:10 crop of the share action and recipient state.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- REMOVED: 5.4 "Respond, item by item" and 5.5 "Downloadable outputs".
+             Both were the rows with no asset, and an unfilled frame in a section
+             built on filled ones reads as a gap rather than as a placeholder.
+
+             Neither capability is lost from the page — both are already stated in
+             the how-it-works rail, which is why removing them costs nothing:
+             · agree / disagree / comment is step 3 ("They agree, disagree or
+               comment on each item, so the contentious issues stand out")
+             · the downloadable schedule is step 1 ("Lex Settle produces a
+               downloadable schedule and the net property pool")
+             If either comes back, it needs a 16:10 asset and it must keep the
+             bleed alternation below intact — the next row added has to be
+             bleed-left. -->
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       Section 6: Who it's for
+       Two columns, one roof — deliberately NOT two brands.
+       ======================================================================== -->
+  <section id="who-its-for" aria-labelledby="who-h">
+    <div class="wrap">
+      <div class="max-w-3xl">
+        <p class="label" style="color: var(--color-primary);">Who it's for</p>
+        <h2 class="h2 mt-4" id="who-h">One platform, whichever side of the table you're on.</h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-x-14 gap-y-12" style="margin-top: var(--sp-6);">
+
+        <div data-reveal>
+          <h3 class="h3">For separating individuals</h3>
+          <p class="mt-4">
+            Set out what you own and what you owe without a spreadsheet. See the net property pool,
+            put forward a split, and work through the other party's response in one place — whether
+            or not you have a lawyer.
+          </p>
+          <ul class="mt-6 grid gap-3 list-none p-0 m-0 small">
+            <li class="flex gap-3"><svg class="check" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Build the schedule in plain language</span></li>
+            <li class="flex gap-3"><svg class="check" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>See the pool recalculate as you enter items</span></li>
+            <li class="flex gap-3"><svg class="check" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Take a downloadable schedule to any adviser</span></li>
+          </ul>
+        </div>
+
+        <div data-reveal style="--reveal-delay:100ms">
+          <h3 class="h3">For solicitors &amp; mediators</h3>
+          <p class="mt-4">
+            Run the property pool for a matter on one shared surface instead of reconciling two
+            schedules by hand. Item-level responses show you exactly where the parties are apart
+            before the conference starts.
+          </p>
+          <ul class="mt-6 grid gap-3 list-none p-0 m-0 small">
+            <li class="flex gap-3"><svg class="check" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>One schedule both parties work from</span></li>
+            <li class="flex gap-3"><svg class="check" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Contentious items surfaced item by item</span></li>
+            <li class="flex gap-3"><svg class="check" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Priced per matter, not per seat</span></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</div><!-- /white-run -->
+
+<!-- ==========================================================================
+     Section 7: Pricing
+     Back on the field. The price card is the only white object here — the one
+     place on the page where a card is the right answer, because the thing
+     being lifted off the ground is the thing you are being asked to buy.
+     ========================================================================== -->
+<section class="on-field" id="pricing" aria-labelledby="pricing-h">
+  <div class="wrap text-center">
+    <h2 class="h2" id="pricing-h">Simple pricing. Pay per matter.</h2>
+    <p class="lead mt-5 mx-auto">
+      One price for the whole matter, for both parties, for as long as it takes to resolve.
+    </p>
+
+    <!-- No [data-reveal] on this card, on purpose. The reveal animates opacity,
+         and an opacity below 1 creates a stacking context, which would trap the
+         knockout's blend and flash the $44 as solid black before settling. The
+         section heading above already carries the entrance. -->
+    <div class="pricecard" style="margin-top: var(--sp-5);">
+      <div class="pricecard__sheet pricecard__sheet--top">
+        <p class="label" style="color: var(--color-muted);">Per matter</p>
+      </div>
+
+      <!-- The knockout: white sheet, pure-black numerals, lighten blend, so the
+           live gradient reads through the figures. This band is the only part
+           of the card with no white painted behind it. -->
+      <div class="pricecut">
+        <p class="price tnum">$44</p>
+      </div>
+
+      <div class="pricecard__sheet pricecard__sheet--bottom">
+      <p style="color: var(--color-text);">Includes GST. <strong style="color: var(--color-ink); font-weight: 600;">No subscription.</strong></p>
+
+      <ul class="mt-8 grid gap-3 list-none p-0 m-0 small text-left" style="color: var(--color-text);">
+        <li class="flex gap-3"><svg class="check" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Full schedule of assets and liabilities</span></li>
+        <li class="flex gap-3"><svg class="check" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Net property pool calculation</span></li>
+        <li class="flex gap-3"><svg class="check" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Proposals, sharing and item-level responses</span></li>
+        <li class="flex gap-3"><svg class="check" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Downloadable schedule</span></li>
+      </ul>
+
+      <a class="btn btn--primary btn--lg w-full mt-9" href="#">Get started</a>
+      <p class="mt-4" style="font-size: .8125rem; color: var(--color-muted);">$44 AUD per matter, includes GST.</p>
+      </div><!-- /pricecard__sheet--bottom -->
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     Section 8: Reassurance  —  NOT LEGAL ADVICE
+     ========================================================================== -->
+<section class="on-field" style="padding-block: clamp(3rem, 6vw, 5rem);" aria-labelledby="reassurance-h">
+  <div class="wrap">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="h2" id="reassurance-h" style="font-size: clamp(1.5rem, 2.6vw, 2rem);">
+        Lex Settle is a calculation and collaboration tool, not legal advice.
+      </h2>
+      <p class="mt-5 mx-auto measure">
+        It helps you set out and agree the numbers. It does not tell you what you are entitled to,
+        and it is not a substitute for advice from a qualified professional.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     Section 9: Final CTA — knockout band
+     The headline is cut out of a white sheet so the live gradient reads through
+     the letterforms. No ancestor of .knockout may carry transform/opacity/filter.
+     In Webflow: a div with background #fff and Blend mode "Lighten", black type.
+     ========================================================================== -->
+<section class="cta-band" aria-labelledby="cta-h">
+  <div class="knockout">
+    <div class="wrap">
+      <h2 class="display" id="cta-h" style="font-size: clamp(2.4rem, 7vw, 5.5rem);">
+        Resolve your property settlement with confidence.
+      </h2>
+    </div>
+  </div>
+  <div class="knockout-foot">
+    <div class="wrap">
+      <div class="cta-row flex flex-wrap gap-3">
+        <a class="btn btn--primary btn--lg" href="#pricing">Get started</a>
+        <a class="btn btn--outline btn--lg" href="#">Sign in</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ==========================================================================
+     Section 10: Footer
+     ========================================================================== -->
+<footer class="footer">
+  <div class="wrap" style="padding-block: var(--sp-6) var(--sp-4);">
+
+    <div class="grid md:grid-cols-12 gap-x-10 gap-y-10">
+      <div class="md:col-span-5">
+        <a href="#top" class="logo" aria-label="Lex Settle — home">
+          <!-- The footer ground is solid --field-base and never changes, so it
+               takes the white variant only — no swap, nothing to cross-fade. -->
+          <img class="logo__img" src="assets/logoWordmarkWhite.svg" alt="" width="142" height="41">
+        </a>
+        <p class="small mt-5 measure" style="color: var(--on-field-faint); max-width: 42ch;">
+          A property pool calculation and collaboration tool for property settlement matters.
+          Not legal advice.
+        </p>
+      </div>
+
+      <nav class="md:col-span-3" aria-label="Footer — product">
+        <p class="label" style="color: var(--on-field-faint);">Product</p>
+        <ul class="grid gap-3 mt-4 list-none p-0 m-0 small">
+          <li><a href="#how-it-works">How it works</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#who-its-for">Who it's for</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+        </ul>
+      </nav>
+
+      <nav class="md:col-span-4" aria-label="Footer — company">
+        <p class="label" style="color: var(--on-field-faint);">Lex Settle</p>
+        <ul class="grid gap-3 mt-4 list-none p-0 m-0 small">
+          <li><a href="#">Sign in</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Terms of use</a></li>
+          <li><a href="#">Privacy policy</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="flex flex-wrap gap-x-6 gap-y-2 justify-between items-center small"
+         style="margin-top: var(--sp-6); padding-top: var(--sp-3); border-top: 1px solid rgba(255,255,255,.12); color: var(--on-field-faint);">
+      <p>© 2026 Lex Settle. All rights reserved.</p>
+      <p>lexsettle.com &nbsp;·&nbsp; lexsettle.com.au</p>
+    </div>
+
+  </div>
+</footer>
+
+</div><!-- /page -->
+
+<script>
+/* ==========================================================================
+   Minimal vanilla JS. Nothing here is required for the page to read correctly.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  /* --- Nav: transparent over the hero, white sheet once scrolled --- */
+  var nav = document.getElementById('nav');
+  /* TWO INDEPENDENT REASONS for the white sheet, and they have to be evaluated
+     together. Scroll position is one; an open mobile menu is the other, because
+     the panel is a white sheet and a transparent bar above it leaves the panel
+     hanging off nothing.
+     This used to be `scrollY > 40` alone, which meant the scroll handler and the
+     menu toggle fought over the same class: opening the menu set it, and the very
+     next scroll event — a touch drag, or the one an anchor jump fires — took it
+     straight back off, stranding a white panel on a transparent bar over the
+     field. Reproduced at scrollY 0 by dispatching one scroll event. */
+  var navSheet = function () {
+    nav.classList.toggle('is-scrolled', window.scrollY > 40 || panel.classList.contains('is-open'));
+  };
+
+  /* --- Mobile menu --- */
+  var toggle = document.getElementById('navtoggle');
+  var panel  = document.getElementById('navpanel');
+  /* One function owns the panel's state, because the two callers below used to set
+     it independently and disagreed: closing via a link cleared `is-open` and
+     aria-expanded but left aria-label reading "Close menu", so the button
+     announced the wrong action for the rest of the session. */
+  function setMenu(open) {
+    panel.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    navSheet();                       /* one owner for the class — see above */
+  }
+  toggle.addEventListener('click', function () {
+    setMenu(!panel.classList.contains('is-open'));
+  });
+  panel.addEventListener('click', function (e) {
+    if (e.target.closest('a')) setMenu(false);
+  });
+  /* Escape closes it and returns focus to the control that opened it — without
+     this, dismissing by keyboard is impossible and focus is left inside a panel
+     that visibility has just removed from the tree. */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && panel.classList.contains('is-open')) {
+      setMenu(false);
+      toggle.focus();
+    }
+  });
+
+  /* Bound here rather than beside navSheet's definition: it reads `panel`, which
+     is only assigned above. */
+  navSheet();
+  window.addEventListener('scroll', navSheet, { passive: true });
+
+  var allowMotion = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ------------------------------------------------------------------------
+     THE SILK FIELD
+
+     One fragment shader, no library, ~2KB of GLSL. Two rounds of domain
+     warping through a gradient-noise fBm: fbm(p) warps into q, q warps into r,
+     r warps the final sample. That chain is what produces folds — a crease
+     with a direction and a ridge. Blurred circles cannot make one.
+
+     BUDGET, because an always-on background effect that costs anything real is
+     a bug:
+     · Half resolution at DPR capped to 1.25. The output is a smooth gradient,
+       so the upscale is invisible, and the CSS grain layer on top covers what
+       little softness is left. ~0.16× the fragments of a naive full-res canvas.
+     · Three octaves, three fbm calls per pixel, and a hash with no
+       transcendental in it. The usual sin-based hash costs 8 sin per noise
+       lookup — ~100 per pixel here, which is what makes this kind of shader
+       janky on integrated graphics.
+     · 30fps. The field drifts at 0.035 units/second; the difference between 30
+       and 60 is not perceptible at that speed, and it halves the GPU cost.
+     · failIfMajorPerformanceCaveat, so a software renderer declines the context
+       and the CSS blob field runs instead of a 4fps canvas.
+     · Paused entirely while the tab is hidden.
+
+     COLOUR IS A CONTRACT. Every emitted pixel is a mix of the five palette
+     colours, and the sheen is `mix(col, peak, s)` — never `col += s`. That
+     keeps the output inside the convex hull of the palette, so the field's
+     brightest possible pixel is exactly --field-peak and the contrast figures
+     in the token block are guarantees rather than samples.
+
+     Reduced motion: one static frame. The silk is still there, it just holds
+     still — strictly better than dropping to the fallback.
+     ------------------------------------------------------------------------ */
+  (function silkField() {
+    var field  = document.getElementById('field');
+    var canvas = document.getElementById('field-gl');
+    if (!field || !canvas) return;
+
+    var gl;
+    try {
+      gl = canvas.getContext('webgl', {
+        alpha: false, antialias: false, depth: false, stencil: false,
+        powerPreference: 'low-power',
+        failIfMajorPerformanceCaveat: true,
+        /* NOT optional, and the failure it prevents is invisible in testing.
+           By default the drawing buffer is cleared after every composite, so
+           anything that renders a single static frame — the reduced-motion
+           path here, or the whole page while the tab is backgrounded — shows
+           an empty buffer on the next repaint. With alpha:false an empty
+           buffer composites as opaque BLACK, so the field doesn't degrade,
+           it disappears. */
+        preserveDrawingBuffer: true
+      });
+    } catch (e) { return; }
+    if (!gl) return;
+
+    var VERT =
+      'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
+
+    var FRAG = [
+      'precision highp float;',
+      'uniform vec2 u_res;',
+      'uniform vec2 u_d1,u_d2;',
+      'uniform vec2 u_grain;',
+      'uniform float u_push;',
+      'uniform float u_warp;',
+      'uniform vec2 u_ptr;',
+      'uniform vec3 c0,c1,c2,c3,c4;',
+
+      /* Cheap ALU hash — no sin. Returns a signed 2D gradient. */
+      'vec2 hash2(vec2 p){',
+      '  vec3 q=fract(vec3(p.xyx)*vec3(.1031,.1030,.0973));',
+      '  q+=dot(q,q.yzx+33.33);',
+      '  return -1.+2.*fract((q.xx+q.yz)*q.zy);',
+      '}',
+
+      /* Gradient (Perlin-style) noise: smoother than value noise, which
+         matters because value noise's axis-aligned lattice shows up as a grid
+         once you warp the domain twice. */
+      'float noise(vec2 p){',
+      '  vec2 i=floor(p),f=fract(p);',
+      '  vec2 u=f*f*(3.-2.*f);',
+      '  return mix(mix(dot(hash2(i),f),dot(hash2(i+vec2(1,0)),f-vec2(1,0)),u.x),',
+      '             mix(dot(hash2(i+vec2(0,1)),f-vec2(0,1)),dot(hash2(i+vec2(1,1)),f-vec2(1,1)),u.x),u.y);',
+      '}',
+
+      /* THREE octaves with a STEEP amplitude falloff (0.38, not 0.5), so the
+         second and third contribute shape rather than texture. The reference's
+         field is, structurally, a defocused mesh gradient: about four very
+         large soft regions across the whole viewport and no hard edge anywhere.
+         Standard 0.5 falloff over four octaves is how you get fine filament
+         detail, which is the wrong material entirely. */
+      'float fbm(vec2 p){',
+      '  float a=.5,v=0.;',
+      '  mat2 m=mat2(.8,.6,-.6,.8);',
+      '  for(int i=0;i<3;i++){v+=a*noise(p);p=m*p*2.02;a*=.38;}',
+      '  return v;',
+      '}',
+
+      'void main(){',
+      '  vec2 uv=gl_FragCoord.xy/u_res;',
+      '  vec2 asp=vec2(u_res.x/u_res.y,1.);',
+      '  vec2 sp=(uv-.5)*asp;',
+
+      /* THE CURSOR DEFORMS THE MATERIAL, it does not light it.
+         The sampling coordinate is displaced locally around the pointer, so the
+         folds themselves bulge and slide as you move through them — the field
+         behaves like cloth being pushed rather than an image reacting to input.
+
+         Displacement happens HERE, in aspect-corrected screen space, before the
+         rotation and the anisotropic squash. Applying it after would push along
+         the squashed axis and the deformation would come out skewed, reading as
+         a lens artefact rather than as a material.
+
+         Two components, both scaled by a gaussian falloff so there is never a
+         hard bubble edge:
+         · radial, pushing the pattern away from the cursor
+         · tangential, stirring it around the cursor
+         The tangential term is driven ENTIRELY by u_push (pointer speed). At
+         rest almost nothing happens: a static deformation pinned to the cursor
+         is just a lens stuck to the mouse. The field should answer movement, not
+         presence. */
+      '  vec2 mp=u_ptr*.5*asp;',
+      '  vec2 dv=sp-mp;',
+      '  float dd=length(dv);',
+      '  float fall=exp(-dd*dd*3.2);',
+      /* Displacement is proportional to dv, NOT to normalize(dv). This is the
+         whole difference between a material and a lens. A normalized direction
+         is discontinuous at the cursor: every fragment around it is pushed at
+         full magnitude away from a single point, which pinches into a vortex
+         with visible radiating spokes — measured and rejected in the first
+         build of this effect. Scaling by dv itself sends displacement to zero
+         AT the cursor, peaks it at dd≈0.4 (roughly a fifth of the screen away),
+         and decays smoothly outward: a broad soft swell with no centre. */
+      '  sp+=fall*(dv*(.14+.45*u_push)+vec2(-dv.y,dv.x)*(.40*u_push));',
+
+      /* BROAD. 0.95 puts roughly one and a half lobes across a desktop screen.
+         Earlier builds ran at 1.9-2.9, which is what made this read as smoke:
+         dozens of small forms instead of a few large ones. The reference has so
+         few features you can count them. */
+      '  vec2 p=sp*.95;',
+      /* Rotate the domain ~25 degrees, THEN squash one axis. Squashing before
+         rotating would elongate the forms horizontally, which reads as haze
+         layers; doing it after gives diagonal elongation, which is how cloth
+         hangs and is the direction the reference's folds run. */
+      '  p=mat2(.906,-.423,.423,.906)*p;',
+      '  p.x*=.62;',
+      /* A small whole-field lean toward the cursor on top of the local
+         deformation, so the response has a scale larger than the bulge. */
+      '  p+=u_ptr*.04;',
+
+      /* ONE MILD WARP, strength 0.65.
+         The previous build warped twice at 2.4 and 1.9 and then drew a ridge
+         term off length(r). That combination is not a subtle version of this
+         one, it is a different material: warping the domain hard enough to fold
+         it back on itself produces curl, and a smoothstep on the warp magnitude
+         draws a thin bright line along every curl. Thin bright lines over fine
+         octaves IS smoke. There is no ridge term here at all, and the warp only
+         goes far enough to stop the regions reading as circles.
+
+         MOTION IS BOUNDED. Advancing the offsets linearly with time translates
+         the sample point through an unbounded noise landscape: the field
+         genuinely drifts, but into whatever is over there, and some
+         neighbourhoods are flat. Tested two minutes in, an early build had
+         wandered somewhere with nothing in frame. u_d1/u_d2 are slow Lissajous
+         offsets on a fixed radius, so the gradient morphs and the regions travel
+         while the composition never leaves the neighbourhood that was
+         art-directed. Computed on the CPU: they depend only on time, so making
+         every fragment evaluate four sines would be per-pixel work for a
+         per-frame value. */
+      '  vec2 q=vec2(fbm(p+u_d1),fbm(p+vec2(4.7,2.1)+u_d1.yx));',
+      '  float f=fbm(p+u_warp*q+u_d2);',
+
+      /* Wide gain, centred. The reference's power is its RANGE — near-black
+         troughs against bright steel — not its mean. */
+      '  float m=clamp(f*1.75+.56,0.,1.);',
+      '  m=smoothstep(.02,.98,m);',
+
+      /* Weighted toward the top of the ramp on purpose. The reference reads as
+         a mid-blue page with dark pockets, not a dark page with light pockets —
+         its MEAN is high while its peak stays bounded. Raising the mean is free
+         against the contrast contract; raising the peak is not. */
+      '  vec3 col=mix(c0,c1,smoothstep(0.,.18,m));',
+      '  col=mix(col,c2,smoothstep(.10,.46,m));',
+      '  col=mix(col,c3,smoothstep(.38,.88,m));',
+
+      /* Cobalt pooled low-left, holding the app blue on the field.
+         Written as 1.0 - smoothstep(lo, hi, x), NOT smoothstep(hi, lo, x):
+         reversed edges are UNDEFINED in GLSL and this driver returns ~1
+         everywhere, which floods the field with a flat cobalt wash and erases
+         the structure. It looks like a tuning problem, not a bug. */
+      '  float pool=1.-smoothstep(.12,.88,uv.y+uv.x*.40);',
+      '  col=mix(col,c4,pool*smoothstep(.46,1.,m)*.34);',
+
+      /* ONE LIGHT DIRECTION. Most of the page's copy is left-set, so the left is
+         the shaded side and the bright region lives out right. Mixed toward c1,
+         never toward black, so the output stays inside the palette hull.
+
+         This is a MARGIN, not the legibility mechanism — it used to be described
+         as the latter, which mattered when the hero copy was centred and started
+         extending into the brighter right-hand side. Nothing had to change,
+         because the guarantee never came from here: the convex hull caps the
+         field's brightest possible pixel at --field-peak, where --on-field-soft
+         still measures 4.70:1. The shading only ever bought extra headroom on the
+         side the copy happened to be on. */
+      '  col=mix(col,c1,(1.-smoothstep(0.,.72,uv.x))*.16);',
+
+      /* DITHER ONLY — the film grain is NOT done here, and that is a resolution
+         decision rather than a stylistic one. This buffer renders at half scale
+         and is upscaled by CSS, so per-fragment noise arrives on screen as ~2px
+         blocks: chunky digital noise, not grain. Grain has to be native
+         resolution, so it lives in .field__grain over the top (see § 1. THE
+         FIELD). What stays here is a sub-LSB dither, which is all that is
+         needed to stop an 8-bit ramp this dark from banding.
+
+         SUBTRACTIVE, and that is the contrast contract rather than taste. The
+         previous term was `col += d*.004` with d signed in -1..1, which is a
+         symmetric dither — and symmetric means half of it is additive. Measured
+         on the live canvas it put the brightest pixel at #3B67B4, one step above
+         --field-peak, so the convex-hull guarantee that the whole token block
+         rests on was false by about 1 LSB (soft copy 4.62:1 rather than 4.70:1).
+         Folded to 0..1 and subtracted, the dither can only ever darken, so the
+         hull holds by construction and the peak is exactly --field-peak again.
+         Band-breaking is indifferent to the sign — a ramp this dark only needs
+         sub-LSB variation, not variation in both directions. */
+      '  float d=hash2(gl_FragCoord.xy+u_grain).x*.5+.5;',
+      '  col-=d*.004;',
+
+      '  gl_FragColor=vec4(col,1.);',
+      '}'
+    ].join('\n');
+
+    function compile(type, src) {
+      var s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { gl.deleteShader(s); return null; }
+      return s;
+    }
+
+    var vs = compile(gl.VERTEX_SHADER, VERT);
+    var fs = compile(gl.FRAGMENT_SHADER, FRAG);
+    if (!vs || !fs) return;
+
+    var prog = gl.createProgram();
+    gl.attachShader(prog, vs);
+    gl.attachShader(prog, fs);
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
+    gl.useProgram(prog);
+
+    var buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(prog, 'a');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+    var uRes  = gl.getUniformLocation(prog, 'u_res');
+    var uD1   = gl.getUniformLocation(prog, 'u_d1');
+    var uGrain= gl.getUniformLocation(prog, 'u_grain');
+    var uD2   = gl.getUniformLocation(prog, 'u_d2');
+    var uPtr  = gl.getUniformLocation(prog, 'u_ptr');
+    var uPush = gl.getUniformLocation(prog, 'u_push');
+    var uWarp = gl.getUniformLocation(prog, 'u_warp');
+
+    /* Palette read from the tokens, so :root stays the single source of truth
+       and the contrast contract can't drift out of sync with the CSS. */
+    var cs = getComputedStyle(document.documentElement);
+    function rgb(name, fallback) {
+      var v = (cs.getPropertyValue(name) || '').trim() || fallback;
+      var h = v.replace('#', '');
+      if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+      var n = parseInt(h, 16);
+      return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+    }
+    var pal = [
+      ['c0', rgb('--field-trough', '#04081A')],
+      ['c1', rgb('--field-deep',   '#131F3C')],
+      ['c2', rgb('--field-mid',    '#243D70')],
+      ['c3', rgb('--field-peak',   '#3A66B2')],
+      ['c4', rgb('--field-cobalt', '#2B57D6')]
+    ];
+    pal.forEach(function (e) {
+      gl.uniform3f.apply(gl, [gl.getUniformLocation(prog, e[0])].concat(e[1]));
+    });
+
+    var SCALE = 0.5;
+    var w = 0, h = 0;
+    /* Sized from the viewport, not from canvas.clientWidth. The canvas is laid
+       out inside .field, which carries `contain: strict` — size containment
+       there makes the element's box an unreliable thing to measure a render
+       buffer from, and the CSS already pins the canvas to exactly 100vw x 100vh.
+       So ask the viewport directly. */
+    function resize() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+      var vw = window.innerWidth  || document.documentElement.clientWidth  || 0;
+      var vh = window.innerHeight || document.documentElement.clientHeight || 0;
+      /* A zero viewport is a real state — a backgrounded or prerendered tab, a
+         hidden iframe — and it must not be *recorded*. Clamping it to a 2px
+         buffer and storing that in w/h means the size looks "current" forever
+         after: nothing fires a resize event when a hidden tab is shown, so the
+         field would run at 2x2 for the life of the page, which reads as one
+         flat colour rather than as a broken canvas. Bail instead and let the
+         ResizeObserver below deliver the first real box. */
+      if (vw < 2 || vh < 2) return false;
+      var nw = Math.max(2, Math.round(vw * dpr * SCALE));
+      var nh = Math.max(2, Math.round(vh * dpr * SCALE));
+      if (nw === w && nh === h) return false;
+      w = nw; h = nh;
+      canvas.width = w; canvas.height = h;
+      gl.viewport(0, 0, w, h);
+      gl.uniform2f(uRes, w, h);
+      return true;
+    }
+
+    /* --- POINTER: A SPRING, NOT A LERP -------------------------------------
+       The field's response to the cursor is integrated as a damped spring
+       rather than eased toward the target, and that is the whole difference
+       between physical and mechanical. A lerp can only ever approach the
+       target, so a fast flick looks like the field is being dragged along a
+       rail. A spring stores the energy of the movement: flick and the field
+       overshoots, swells, and settles back over about a second.
+
+       `push` is the swell — pointer SPEED, normalised and smoothed, driving the
+       deformation's amplitude and all of its tangential stir. It is what makes
+       the field answer movement rather than mere presence: hold the cursor
+       still and the material comes back to rest under it.
+
+       Asymmetric smoothing on push (fast attack, slow release) because that is
+       how the eye reads impact: the swell should arrive with the gesture and
+       decay after it, not fade in behind it. --- */
+    var px = 0, py = 0;      /* spring position, -1..1 */
+    var vx = 0, vy = 0;      /* spring velocity */
+    var tx = 0, ty = 0;      /* raw pointer target */
+    var push = 0;            /* smoothed speed, 0..1 */
+    var K = 0.14, DAMP = 0.76;
+
+    if (allowMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      window.addEventListener('pointermove', function (e) {
+        tx = (e.clientX / window.innerWidth)  * 2 - 1;
+        ty = (e.clientY / window.innerHeight) * 2 - 1;
+      }, { passive: true });
+      /* Cursor leaves the window: ease the material back to centre rather than
+         freezing it mid-deformation. */
+      document.addEventListener('pointerleave', function () { tx = 0; ty = 0; }, { passive: true });
+    }
+
+    function spring() {
+      vx = (vx + (tx - px) * K) * DAMP;
+      vy = (vy + (ty - py) * K) * DAMP;
+      px += vx;
+      py += vy;
+      /* Spring velocity, not raw pointer delta — so the swell follows the
+         material's motion and inherits the overshoot rather than spiking on a
+         single mousemove and vanishing. */
+      var speed = Math.min(1, Math.sqrt(vx * vx + vy * vy) * 11);
+      /* Attack 0.34, release 0.10. Simulated at 30fps a flick peaks at 0.99 and
+         is down to 0.11 by 1.5s and 0.03 by 2s. The first build released at
+         0.045, which still measured 0.34 a second and a half after the gesture
+         had stopped — the deformation visibly lagged the cursor by seconds and
+         read as the page being slow rather than the material being soft. */
+      push += (speed - push) * (speed > push ? 0.34 : 0.10);
+    }
+
+    var t0 = performance.now();
+    var last = 0;
+    var STEP = 1000 / 30;
+    var raf = 0;
+    /* False until the canvas has a real render size. Nothing may draw before
+       then: with u_res still unset, uv divides by zero and every fragment
+       resolves to the same non-colour — so drawing early doesn't look like a
+       sizing bug, it looks like the shader is a flat fill. */
+    var ready = false;
+    /* Set once the GPU context is gone. Terminal on purpose — see the
+       webglcontextlost handler below. Every path that could hand the field back
+       to the canvas is gated on it, because a resize or a tab becoming visible
+       must not re-add .is-gl over a context that can no longer paint. */
+    var lost = false;
+
+    /* One frame, uniforms and all. Factored out because THREE callers need to be
+       able to paint, not just the loop: the loop, the handover, and — the one
+       that was missing and turned the field black — a resize. */
+    function paint(seconds) {
+      gl.uniform2f(uPtr, px, py);
+      gl.uniform1f(uPush, push);
+      drift(seconds);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+    function clock() { return allowMotion ? (performance.now() - t0) / 1000 : 0; }
+
+    function draw(now) {
+      raf = 0;
+      if (lost) return;
+      if (document.hidden) return;                 /* resumed by visibilitychange */
+      if (!ready) { raf = requestAnimationFrame(draw); return; }
+      if (now - last >= STEP) {
+        last = now;
+        spring();
+        paint((now - t0) / 1000);
+      }
+      raf = requestAnimationFrame(draw);
+    }
+
+    /* --- THE AUTONOMOUS DRIFT: A NOISE WALK, NOT A LISSAJOUS ----------------
+       The field wanders on its own, independently of the cursor, and the shape
+       of that wander matters more than its speed.
+
+       The first build drove the warp offsets with sine pairs. Those are smooth
+       and bounded, which is why they were chosen — but a Lissajous figure is a
+       *closed path*: the field eases out along a route and then eases back down
+       the same one. Watch it for a minute and you feel the return stroke. It
+       reads as a mechanism, not as weather.
+
+       These offsets are instead driven by smooth 1-D value noise over time —
+       two octaves, one per axis, four independent seeds. The heading changes
+       unpredictably and the path never closes, so there is no return stroke to
+       notice. It keeps the property that made sines attractive: fbm1 is bounded
+       to ±1 by construction (0.65 + 0.35), so the offsets are still hard-capped
+       and the composition cannot wander out of the neighbourhood that was
+       art-directed.
+
+       PACE AND REACH were both raised after the first two builds read as static,
+       and the cap that had been holding them down turned out to be inherited
+       from a shader that no longer exists. The old ±0.42 limit existed because
+       the smoke-era field had genuinely flat neighbourhoods to avoid. This
+       construction does not: sweeping the offsets out to a radius of 5.0 and
+       measuring, structure (luminance σ) stays in 0.016–0.048 and the peak never
+       moves. There is nowhere bad to wander to, so the reach is now 1.4 rather
+       than 0.42.
+
+       Rate is what the eye actually reads as "alive", not reach. WANDER = 0.11
+       against a reach of 1.4 gives a peak of roughly 23% of a feature width per
+       second — about four times the first build, which moved 5% and read as
+       still.
+
+       TRANSLATION ALONE IS NOT ENOUGH at this rate: sliding a broad blob field
+       past itself looks like a texture on a conveyor. u_warp modulates the warp
+       STRENGTH on its own noise channel, so the forms reshape as well as move —
+       the field breathes between smoother and more folded. That is most of what
+       makes it read as weather rather than as a pan. --- */
+    var WANDER = 0.11;
+    var REACH1 = 1.4, REACH2 = 1.0;
+
+    /* Deterministic 0..1 hash. sin() is fine here: this runs four times a frame
+       on the CPU, not once per pixel. */
+    function h1(n) {
+      var x = Math.sin(n * 12.9898) * 43758.5453123;
+      return x - Math.floor(x);
+    }
+    function vnoise(x, seed) {
+      var i = Math.floor(x), f = x - i;
+      var u = f * f * (3 - 2 * f);                 /* smoothstep, so C1 continuous */
+      var a = h1(i + seed), b = h1(i + 1 + seed);
+      return (a + (b - a) * u) * 2 - 1;            /* -1..1 */
+    }
+    function fbm1(x, seed) {
+      return vnoise(x, seed) * 0.65 + vnoise(x * 2.13, seed + 31.7) * 0.35;
+    }
+
+    function drift(s) {
+      var w = s * WANDER;
+      gl.uniform2f(uD1, fbm1(w, 11.3) * REACH1, fbm1(w, 57.1) * REACH1);
+      gl.uniform2f(uD2, fbm1(w * 0.77, 91.7) * REACH2, fbm1(w * 0.61, 133.3) * REACH2);
+      /* Warp strength on its own slower channel: 0.30 .. 0.86. Low end is a
+         smooth wash, high end is distinctly folded, and crossing between them is
+         the shape change that translation cannot produce. */
+      gl.uniform1f(uWarp, 0.58 + fbm1(w * 0.62, 201.5) * 0.28);
+      /* Grain seed, stepped at 10Hz. Reseeding every frame is buzz; the
+         reference steps once a second. 10Hz is the cinematic middle. Two
+         uncorrelated components so the hash gets a genuinely new lattice
+         rather than a translated one. */
+      var k = Math.floor(s * 10);
+      gl.uniform2f(uGrain, (k % 71) * 13.137, (k % 53) * 7.919);
+    }
+
+    /* Paint one real frame, then hand the field over. Both are gated on having
+       a size: if the page loaded into a zero-height viewport, the blob field
+       keeps running and the handover simply waits for the first real box. */
+    function activate() {
+      if (ready || lost) return;
+      ready = true;
+      paint(clock());
+      field.classList.add('is-gl');
+    }
+    if (resize()) activate();
+
+    /* Resizing is event-driven, not per-frame: reading innerWidth in the draw
+       loop would flush layout 30 times a second for a value that changes twice
+       a session. Orientation change on iOS reports the old size synchronously,
+       hence the deferred second pass. */
+    var reflow = function () {
+      if (lost) return;
+      if (!resize()) return;
+      if (!ready) { activate(); return; }
+      /* REPAINT NOW, ALWAYS. Setting canvas.width reallocates the drawing buffer,
+         which clears it — and with alpha:false an empty buffer composites as
+         opaque BLACK, over a blob fallback that .is-gl has already withdrawn. So
+         the window between a resize and the next painted frame is not a slightly
+         stale field, it is a black one.
+
+         This used to repaint only under reduced motion, on the reasoning that the
+         animation loop would cover the other case on its next tick. It does not
+         always get a tick: draw() returns without rescheduling while
+         document.hidden is true, and "hidden" is not the same as "not being
+         composited" — a prerendered page, an embedded webview, and the preview
+         pane this was built in all report hidden while still being painted to a
+         screen. In exactly those surfaces the field stayed black for the life of
+         the page. Even where the loop is running, deferring means a black frame
+         for up to a 30fps tick on every resize step, which flickers through a
+         window drag.
+
+         Painting here is one draw call against an event that fires twice a
+         session. There is no case where waiting was worth it. */
+      paint(clock());
+    };
+    window.addEventListener('resize', reflow, { passive: true });
+    window.addEventListener('orientationchange', function () {
+      reflow();
+      setTimeout(reflow, 250);
+    }, { passive: true });
+
+    /* The canvas's own box is the one signal that arrives whether or not a
+       resize event does — it fires on first layout, and again if the element
+       ever gets a real box after starting at zero. This is what recovers the
+       field for a tab that loaded hidden. */
+    if (window.ResizeObserver) {
+      new ResizeObserver(reflow).observe(canvas);
+    }
+
+    /* --- CONTEXT LOSS: HAND THE FIELD BACK TO THE FALLBACK ------------------
+       A GPU context is not guaranteed for the life of a page — a driver reset,
+       a GPU process crash, or the browser evicting the oldest context because
+       another tab wanted one all take it away, and mobile does the last of those
+       routinely. Without this the failure is total rather than graceful: the
+       canvas stops painting, and because `.is-gl` has already withdrawn the blob
+       field to `visibility: hidden`, the fallback that exists for exactly this
+       moment stays hidden. The page would sit on flat --field-base with no
+       field at all.
+
+       Dropping `.is-gl` reverses both halves in one line — the canvas fades back
+       to opacity 0 and the blobs return with their animations.
+
+       preventDefault() is deliberately NOT called. It is what makes a context
+       *restorable*, and restoring means rebuilding the program, buffer and every
+       uniform. That path would run once in a blue moon, on the hardware least
+       able to tell us it broke, and it can only ever arrive back at what the CSS
+       fallback is already showing. Not worth the code that can rot untested. --- */
+    canvas.addEventListener('webglcontextlost', function () {
+      lost = true;
+      if (raf) { cancelAnimationFrame(raf); raf = 0; }
+      ready = false;
+      field.classList.remove('is-gl');
+    }, { passive: true });
+
+    if (allowMotion) {
+      raf = requestAnimationFrame(draw);
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          if (raf) { cancelAnimationFrame(raf); raf = 0; }
+        } else if (!raf && !lost) {
+          reflow();
+          /* Rebase the clock: the field should pick up where it left off, not
+             jump forward by however long the tab was in the background. Guarded
+             on `last`, because if the tab was hidden before the first animated
+             frame ever ran, `last` is 0 and this would push t0 into next week. */
+          if (last) t0 += performance.now() - last;
+          last = 0;
+          raf = requestAnimationFrame(draw);
+        }
+      });
+    }
+  })();
+
+  /* --- Real screenshots: drop the image element if the file isn't there yet,
+         so the labelled placeholder shows through instead of a broken frame. --- */
+  document.querySelectorAll('.shot__img').forEach(function (img) {
+    var drop = function () { img.remove(); };
+    if (img.complete && !img.naturalWidth) drop();
+    else img.addEventListener('error', drop, { once: true });
+  });
+
+  /* ------------------------------------------------------------------------
+     THE PINNED RAIL (section 4)
+
+     Converts vertical scroll into horizontal travel, then hands the page back.
+
+     The spacer (#rail-track) is given extra height equal to the horizontal
+     distance the rail has to cover. While that spacer passes the viewport the
+     stage is stuck at top: 0, so the scroll the user spends there buys sideways
+     movement instead of downward movement. -rect.top is exactly how far into
+     the spacer we are, so progress needs no scroll accumulator and no state —
+     it is a pure function of position and survives resize, reload and
+     restored scroll positions.
+
+     Every measurement is re-derived in setup(), so this cannot drift out of
+     sync with the layout. If pinning is not available the section is left
+     exactly as authored: a native horizontal-scroll rail.
+     ------------------------------------------------------------------------ */
+  var hs    = document.getElementById('how-it-works');
+  var track = document.getElementById('rail-track');
+  var stage = document.getElementById('rail-stage');
+  var rail  = document.getElementById('rail');
+  var bar   = document.getElementById('rail-bar');
+  var steps = rail ? rail.children.length : 0;
+  var pinned = false;
+  var travel = 0;          /* px of horizontal distance to cover */
+  var ticking = false;
+
+  /* Short viewports can't spare 100vh to pin, and below 900px the panels are
+     wider than the screen, so sideways travel would fight the page scroll. */
+  var pinQuery = window.matchMedia('(min-width: 900px) and (min-height: 620px)');
+
+  function canPin() { return allowMotion && pinQuery.matches && steps > 1; }
+
+  function render() {
+    ticking = false;
+    if (!pinned) return;
+    var p = travel > 0
+      ? Math.min(1, Math.max(0, -track.getBoundingClientRect().top / travel))
+      : 0;
+    rail.style.transform = 'translate3d(' + (-p * travel).toFixed(2) + 'px,0,0)';
+    if (bar) bar.style.transform = 'scaleX(' + (0.04 + p * 0.96).toFixed(4) + ')';
+  }
+
+  /* Not `onScroll` — the nav already owns that name in this scope, and a
+     hoisted redeclaration would quietly register the nav's handler twice and
+     this one never. */
+  function onRailScroll() {
+    if (pinned && !ticking) { ticking = true; requestAnimationFrame(render); }
+  }
+
+  function unpin() {
+    pinned = false;
+    hs.classList.remove('is-pinned');
+    track.style.height = '';
+    rail.style.transform = '';
+    if (bar) bar.style.transform = '';
+  }
+
+  function setup() {
+    if (!hs || !track || !stage || !rail) return;
+
+    if (!canPin()) { if (pinned) unpin(); return; }
+
+    /* Measure in the pinned layout but before any transform is applied,
+       otherwise the rail's own width is read through its offset. */
+    hs.classList.add('is-pinned');
+    rail.style.transform = 'none';
+
+    travel = Math.max(0, rail.offsetWidth - window.innerWidth);
+
+    /* Nothing to travel (very wide viewport) — pinning would just freeze the
+       page for a screen's worth of scroll and give nothing back. */
+    if (travel < 80) { unpin(); return; }
+
+    track.style.height = (stage.offsetHeight + travel) + 'px';
+    pinned = true;
+    render();
+  }
+
+  if (hs && track && stage && rail) {
+    setup();
+    /* Inter loads async and the panel text reflows when it lands, which changes
+       the rail's width — so measure again once the face is actually in. */
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(setup); }
+    window.addEventListener('load', setup);
+    window.addEventListener('resize', setup, { passive: true });
+    window.addEventListener('scroll', onRailScroll, { passive: true });
+    if (pinQuery.addEventListener) { pinQuery.addEventListener('change', setup); }
+
+    /* Arrow buttons. In pinned mode a "step" is a vertical distance, so the
+       buttons scroll the page and the rail follows — one mechanism, not two.
+       In base mode they scroll the rail itself. (Before this they were wired
+       to nothing at all.) */
+    var prev = document.getElementById('rail-prev');
+    var next = document.getElementById('rail-next');
+
+    var go = function (dir) {
+      return function () {
+        if (pinned) {
+          var step = travel / (steps - 1);
+          var top  = track.offsetTop;
+          var at   = Math.round((window.scrollY - top) / step);
+          var to   = Math.min(steps - 1, Math.max(0, at + dir));
+          window.scrollTo({ top: top + to * step, behavior: allowMotion ? 'smooth' : 'auto' });
+        } else {
+          var item = rail.children[0];
+          var by = item ? item.getBoundingClientRect().width + 24 : rail.clientWidth * 0.8;
+          rail.scrollBy({ left: dir * by, behavior: allowMotion ? 'smooth' : 'auto' });
+        }
+      };
+    };
+    if (prev) prev.addEventListener('click', go(-1));
+    if (next) next.addEventListener('click', go(1));
+  }
+
+  /* --- Scroll reveal. Opt-in only: without JS or with reduced motion,
+         every element stays visible at full opacity. --- */
+  if (allowMotion && 'IntersectionObserver' in window) {
+    document.documentElement.classList.add('js-motion');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+    document.querySelectorAll('[data-reveal]').forEach(function (el) { io.observe(el); });
+  }
+})();
+</script>
+
+</body>
+</html>
