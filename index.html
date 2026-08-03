@@ -632,9 +632,17 @@ a { color: inherit; }
 @media (prefers-reduced-motion: no-preference) {
   .navicon__l { transition: transform 260ms var(--ease-out), opacity 150ms var(--ease-out); }
 }
-[aria-expanded="true"] .navicon__l--t { transform: translateY(4px) rotate(45deg); }
+/* ORDER MATTERS, AND IT IS THE REVERSE OF HOW IT READS. A transform list applies
+   right-to-left, so `translateY(4px) rotate(45deg)` rotates FIRST and translates
+   after — the top line swung around the icon's centre while still 4px above it,
+   landing its midpoint at (12.83, 11.17) instead of (10, 10). The bottom arm
+   mirrored it to (12.83, 8.83), so the two crossed 2.8 units right of centre in a
+   20-unit icon and the cross sat visibly off-axis in its 46px button.
+   Rotate LAST: translate the line onto the centre, then spin it there. Both arms
+   now resolve to (10, 10) and cross exactly on the origin they rotate about. */
+[aria-expanded="true"] .navicon__l--t { transform: rotate(45deg) translateY(4px); }
 [aria-expanded="true"] .navicon__l--m { opacity: 0; transform: scaleX(.3); }
-[aria-expanded="true"] .navicon__l--b { transform: translateY(-4px) rotate(-45deg); }
+[aria-expanded="true"] .navicon__l--b { transform: rotate(-45deg) translateY(-4px); }
 
 /* Below 520px the header CTA crowds the logo — it lives in the menu panel instead */
 @media (max-width: 519px) { .nav__actions > .btn { display: none; } }
@@ -680,7 +688,15 @@ a { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   .navpanel, .navpanel.is-open { transition: none; }
 }
-.navpanel a {
+/* :not(.btn), because the panel's last child is a CTA and this rule was eating it.
+   `.navpanel a` is (0,1,1) — a class plus an element — and every button modifier
+   is a bare class at (0,1,0), so the list styling won a specificity contest it
+   should never have entered: the primary CTA rendered with the list's ink text on
+   its blue ground (3.1:1, under AA) and carried a hairline rule under a pill.
+   Excluding .btn is the fix rather than bumping .btn--primary, because the button
+   modifiers are shared with the rest of the page and should not have to out-specify
+   one container to work inside it. */
+.navpanel a:not(.btn) {
   display: flex; align-items: center; min-height: 52px;
   text-decoration: none; color: var(--color-ink); font-weight: 500;
   border-bottom: 1px solid var(--color-border);
