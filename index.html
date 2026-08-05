@@ -47,8 +47,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lex Settle — Calculate your property pool. Agree on the split.</title>
-<meta name="description" content="Lex Settle helps separating parties, solicitors and mediators build a clear schedule of assets and liabilities, propose a settlement, and negotiate it in one place. $44 per matter.">
+<title>Lex Settle — Save time resolving property disputes.</title>
+<meta name="description" content="Lex Settle is a universal tool that assists separated parties, solicitors and mediators to resolve property disputes. $44.00 inclusive GST per matter, no subscription.">
 
 <!-- Icons. Both generated from the supplied lockup by taking the mark's two
      paths on their own — the wordmark is illegible at 32px and worse at 16px, so
@@ -1460,8 +1460,10 @@ a { color: inherit; }
     </nav>
 
     <div class="nav__actions">
-      <a class="nav__signin" href="#">Sign in</a>
-      <a class="btn btn--light" href="#pricing">Get started</a>
+      <!-- The app lives on its own subdomain. Same tab, not a new one: signing in
+           is the end of the marketing site's job, not a detour from it. -->
+      <a class="nav__signin" href="https://app.lexsettle.com/login">Sign in</a>
+      <a class="btn btn--light" href="https://app.lexsettle.com/register">Get started</a>
       <button class="navtoggle" id="navtoggle" aria-expanded="false" aria-controls="navpanel" aria-label="Open menu">
         <!-- Three separate lines rather than one path, so each can be transformed
              independently into the close mark. See .navicon__l. -->
@@ -1479,8 +1481,8 @@ a { color: inherit; }
     <a href="#features">Features</a>
     <a href="#who-its-for">Who it's for</a>
     <a href="#pricing">Pricing</a>
-    <a href="#">Sign in</a>
-    <a class="btn btn--primary" href="#pricing">Get started</a>
+    <a href="https://app.lexsettle.com/login">Sign in</a>
+    <a class="btn btn--primary" href="https://app.lexsettle.com/register">Get started</a>
   </div>
 </header>
 
@@ -1506,24 +1508,54 @@ a { color: inherit; }
          to the product rather than as a banner. -->
     <div style="max-width: 60rem; margin-inline: auto; text-align: center;">
       <h1 class="display" data-enter>
-        Calculate your property pool.<br class="hidden sm:block"> Agree on the split.
+        Save time resolving property disputes.
       </h1>
 
       <!-- mx-auto, because .lead caps its own measure: without it the paragraph
            keeps that narrower box but pins it to the left edge of a centred
            block, which reads as a bug rather than as a layout. -->
       <p class="lead mt-7 mx-auto" style="color: var(--on-field-soft); --enter-delay:90ms" data-enter>
-        Lex Settle helps separating parties, solicitors and mediators build a clear schedule
-        of assets and liabilities, propose a settlement, and negotiate it in one place.
+        Lex Settle is a universal tool that assists separated parties, solicitors and
+        mediators to resolve property disputes.
       </p>
 
-      <div class="cta-row flex flex-wrap justify-center gap-3 mt-9" style="--enter-delay:180ms" data-enter>
-        <a class="btn btn--light btn--lg" href="#pricing">Get started</a>
+      <!-- The client's three hero bullets, as a three-up rather than as three
+           centred paragraphs. Verbatim they run 30-40 words each, and stacked
+           under centred copy that is ~110 words of hero, which puts the device
+           below the fold — the thing the first viewport exists to show. The
+           three-up keeps all three claims and costs one row of height.
+
+           Text is LEFT-set inside the centred block, because a two-line
+           sentence centred in a narrow column ragged on both edges is unreadable
+           at this size. The hairline rules are what hold the columns to the
+           shared axis, so the block still reads as centred; this is the same
+           .ruled three-up as section 3, which is why it needs no new CSS. -->
+      <ul class="grid sm:grid-cols-3 gap-x-8 gap-y-6 mt-10 list-none m-0 text-left"
+          style="--enter-delay:180ms" data-enter>
+        <li class="ruled small" style="color: var(--on-field-soft);">
+          <strong style="color: var(--on-field); font-weight: 600;">Calculate the pool.</strong>
+          Prepare the schedule of assets and liabilities, and determine the property pool
+          available for distribution.
+        </li>
+        <li class="ruled small" style="color: var(--on-field-soft);">
+          <strong style="color: var(--on-field); font-weight: 600;">Share the offer.</strong>
+          Send settlement offers through the platform, or download the schedule and offers
+          as a PDF to attach to correspondence.
+        </li>
+        <li class="ruled small" style="color: var(--on-field-soft);">
+          <strong style="color: var(--on-field); font-weight: 600;">Negotiate faster.</strong>
+          Both sides collaborate on the property pool, so the contentious issues are easy
+          to identify.
+        </li>
+      </ul>
+
+      <div class="cta-row flex flex-wrap justify-center gap-3 mt-9" style="--enter-delay:250ms" data-enter>
+        <a class="btn btn--light btn--lg" href="https://app.lexsettle.com/register">Get started</a>
         <a class="btn btn--ghost btn--lg" href="#how-it-works">See how it works</a>
       </div>
 
-      <p class="small mt-6" style="color: var(--on-field-soft); --enter-delay:250ms" data-enter>
-        <span class="tnum">$44</span> per matter, includes GST. No subscription.
+      <p class="small mt-6" style="color: var(--on-field-soft); --enter-delay:320ms" data-enter>
+        <span class="tnum">$44.00</span> (inclusive GST) per matter. No subscription.
       </p>
     </div>
   </div>
@@ -1582,17 +1614,17 @@ a { color: inherit; }
      ========================================================================== -->
 <section class="on-field still" aria-labelledby="problem-h">
   <div class="wrap">
-    <h2 class="h2 max-w-4xl" id="problem-h">Property settlements get stuck in spreadsheets.</h2>
+    <h2 class="h2 max-w-4xl" id="problem-h">Property settlements are delayed preparing spreadsheets and tables.</h2>
 
     <div class="grid md:grid-cols-3 gap-x-10 gap-y-9" style="margin-top: var(--sp-6);">
-      <p class="ruled h3" data-reveal>Two parties keep two versions of the same schedule, emailed back and forth.</p>
-      <p class="ruled h3" data-reveal style="--reveal-delay:90ms">Values, ownership and valuation dates sit across separate documents.</p>
-      <p class="ruled h3" data-reveal style="--reveal-delay:180ms">It's hard to see which items are in dispute — and which are settled.</p>
+      <p class="ruled h3" data-reveal>Both parties manually update their own versions of the property pool and distributions.</p>
+      <p class="ruled h3" data-reveal style="--reveal-delay:90ms">Values, ownership and valuation dates are difficult to record with separate documents.</p>
+      <p class="ruled h3" data-reveal style="--reveal-delay:180ms">It is difficult to identify what remains disputed and which items are resolved.</p>
     </div>
 
     <p class="measure" style="margin-top: var(--sp-6);">
-      Lex Settle keeps the schedule in one shared place, so there is less manual
-      reconciliation and fewer transcription errors between versions.
+      Lex Settle saves you time. Lex Settle creates the schedules on your behalf, which include
+      ownership and valuation dates. You can adjust values and percentages via the platform.
     </p>
   </div>
 </section>
@@ -1659,10 +1691,12 @@ a { color: inherit; }
     <li class="rail__item ruled">
       <div class="rail__body">
         <span class="rail__num">2</span>
-        <h3 class="h3 mt-5" style="color: var(--on-field);">Propose a split</h3>
+        <h3 class="h3 mt-5" style="color: var(--on-field);">Propose a distribution of the assets and liabilities</h3>
         <p class="mt-3 mb-7">
-          Choose which assets and liabilities each party retains, then set the split with a slider
-          or type a percentage. Values update as you move it.
+          Select which assets and liabilities each party proposes to retain. Lex Settle calculates
+          the percentage of the proposed distribution with a &ldquo;slider&rdquo;, or you can enter
+          the percentage and Lex Settle calculates the value for you. The values and percentages
+          adjust accordingly.
         </p>
       </div>
       <!-- ASSET — assets/proposeSplit.webp (step 2 of 3) -->
@@ -1682,8 +1716,10 @@ a { color: inherit; }
         <span class="rail__num">3</span>
         <h3 class="h3 mt-5" style="color: var(--on-field);">Share and negotiate</h3>
         <p class="mt-3 mb-7">
-          Send the proposal to the other party. They agree, disagree or comment on each item,
-          so the contentious issues stand out instead of being buried in a document.
+          You can generate a PDF of your proposal, or elect to share your proposal with the other
+          party via the platform. Lex Settle has an option for the other party to agree, disagree
+          or comment on each proposed distribution of assets and liabilities. This makes it easy
+          to identify what remains a contentious issue.
         </p>
       </div>
       <!-- ASSET — assets/shareandnegotiate.webp (step 3 of 3).
@@ -1914,7 +1950,7 @@ a { color: inherit; }
         <li class="flex gap-3"><svg class="check" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Downloadable schedule</span></li>
       </ul>
 
-      <a class="btn btn--primary btn--lg w-full mt-9" href="#">Get started</a>
+      <a class="btn btn--primary btn--lg w-full mt-9" href="https://app.lexsettle.com/register">Get started</a>
       <p class="mt-4" style="font-size: .8125rem; color: var(--color-muted);">$44 AUD per matter, includes GST.</p>
       </div><!-- /pricecard__sheet--bottom -->
     </div>
@@ -1955,8 +1991,8 @@ a { color: inherit; }
   <div class="knockout-foot">
     <div class="wrap">
       <div class="cta-row flex flex-wrap gap-3">
-        <a class="btn btn--primary btn--lg" href="#pricing">Get started</a>
-        <a class="btn btn--outline btn--lg" href="#">Sign in</a>
+        <a class="btn btn--primary btn--lg" href="https://app.lexsettle.com/register">Get started</a>
+        <a class="btn btn--outline btn--lg" href="https://app.lexsettle.com/login">Sign in</a>
       </div>
     </div>
   </div>
@@ -1996,7 +2032,8 @@ a { color: inherit; }
       <nav class="md:col-span-4" aria-label="Footer — company">
         <p class="label" style="color: var(--on-field-faint);">Lex Settle</p>
         <ul class="grid gap-3 mt-4 list-none p-0 m-0 small">
-          <li><a href="#">Sign in</a></li>
+          <li><a href="https://app.lexsettle.com/login">Sign in</a></li>
+          <li><a href="https://app.lexsettle.com/register">Create an account</a></li>
           <li><a href="#">Contact</a></li>
           <li><a href="#">Terms of use</a></li>
           <li><a href="#">Privacy policy</a></li>
