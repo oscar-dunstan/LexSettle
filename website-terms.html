@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  LEX SETTLE — WEBSITE TERMS OF USE
+  ============================================================================
+  Source: "Website Terms of Use - Lex Settle.docx" (Sprintlaw template),
+  supplied by the client 11 Aug 2026. Set verbatim.
+
+  NOTHING HERE IS EDITED. Clause text is transcribed word for word, including
+  the two [insert] gaps and the <here> cross-reference stub, which are marked
+  with .todo rather than filled in or removed — see assets/legal.css § 5.
+  If a clause reads oddly, it reads oddly in the .docx.
+
+  Clause numbers are drawn by CSS counters, not typed. See assets/legal.css § 4.
+  ============================================================================
+-->
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Website Terms of Use — Lex Settle</title>
+<meta name="description" content="The terms and conditions that apply when you use the Lex Settle website.">
+<!-- Draft legal copy with unfilled placeholders: keep it out of search results
+     until the client has signed it off. -->
+<meta name="robots" content="noindex">
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#0C1526">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+<!-- Same Tailwind CDN as index.html: the shared nav and footer markup below is
+     copied from the homepage and uses its spacing/grid utilities. -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/legal.css">
+</head>
+
+<body>
+
+<!-- The same field as the homepage, from base.css + site.js. -->
+<div class="field" id="field" aria-hidden="true">
+  <div class="field__blob field__blob--b"></div>
+  <div class="field__blob field__blob--a"></div>
+  <div class="field__blob field__blob--d"></div>
+  <div class="field__blob field__blob--c"></div>
+  <div class="field__blob field__blob--e"></div>
+  <canvas class="field__gl" id="field-gl"></canvas>
+  <div class="field__grain"></div>
+</div>
+
+<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:z-[80] focus:top-4 focus:left-4 focus:bg-white focus:text-ink focus:px-4 focus:py-3 focus:rounded-xl focus:font-semibold">Skip to content</a>
+
+<div class="page">
+
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="logo" aria-label="Lex Settle — home">
+      <img class="logo__img logo__img--light" src="assets/logoWordmarkWhite.svg" alt="" width="142" height="41">
+      <img class="logo__img logo__img--dark" src="assets/logoWordmarkColour.svg" alt="" width="142" height="41">
+    </a>
+
+    <nav class="nav__links" aria-label="Primary">
+      <a class="nav__link" href="index.html#how-it-works">How it works</a>
+      <a class="nav__link" href="index.html#features">Features</a>
+      <a class="nav__link" href="index.html#who-its-for">Who it's for</a>
+      <a class="nav__link" href="index.html#pricing">Pricing</a>
+    </nav>
+
+    <div class="nav__actions">
+      <a class="nav__signin" href="https://app.lexsettle.com/login">Sign in</a>
+      <a class="btn btn--light" href="https://app.lexsettle.com/register">Get started</a>
+      <button class="navtoggle" id="navtoggle" aria-expanded="false" aria-controls="navpanel" aria-label="Open menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <line class="navicon__l navicon__l--t" x1="3" y1="6"  x2="17" y2="6"/>
+          <line class="navicon__l navicon__l--m" x1="3" y1="10" x2="17" y2="10"/>
+          <line class="navicon__l navicon__l--b" x1="3" y1="14" x2="17" y2="14"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="navpanel" id="navpanel">
+    <a href="index.html#how-it-works">How it works</a>
+    <a href="index.html#features">Features</a>
+    <a href="index.html#who-its-for">Who it's for</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a href="https://app.lexsettle.com/login">Sign in</a>
+    <a class="btn btn--primary" href="https://app.lexsettle.com/register">Get started</a>
+  </div>
+</header>
+
+<main id="main" class="legal">
+  <div class="wrap" style="max-width: 62rem;">
+    <article class="sheet">
+
+      <header class="legal__head">
+        <p class="label" style="color: var(--on-field-faint);">Lex Settle</p>
+        <h1 class="legal__title mt-3">Website terms and conditions</h1>
+        <p class="small legal__meta mt-4">
+          These terms apply to your use of this website. Your use of the Lex Settle app is
+          governed separately by the <a href="app-terms.html" style="color: var(--on-field-soft);">app terms and conditions</a>.
+        </p>
+        <nav class="legal__siblings small mt-5" aria-label="Legal documents">
+          <a href="website-terms.html" aria-current="page">Website terms</a>
+          <a href="app-terms.html">App terms &amp; conditions</a>
+          <a href="privacy-policy.html">Privacy policy</a>
+        </nav>
+      </header>
+
+      <nav class="toc mt-8" aria-labelledby="toc-h">
+        <p class="label" id="toc-h" style="color: var(--on-field-faint);">Contents</p>
+        <ol class="mt-3">
+          <li><a href="#c1">Introduction</a></li>
+          <li><a href="#c2">Access and use of the website</a></li>
+          <li><a href="#c3">Your obligations</a></li>
+          <li><a href="#c4">Information on the website</a></li>
+          <li><a href="#c5">Intellectual property</a></li>
+          <li><a href="#c6">Links to other websites</a></li>
+          <li><a href="#c7">Security</a></li>
+          <li><a href="#c8">Reporting misuse</a></li>
+          <li><a href="#c9">Privacy</a></li>
+          <li><a href="#c10">Liability</a></li>
+          <li><a href="#c11">General</a></li>
+        </ol>
+      </nav>
+
+      <div class="doc mt-8">
+
+        <section class="cl" id="c1">
+          <h2>Introduction</h2>
+          <ol class="lv-a">
+            <li>These terms and conditions (<span class="term">Terms</span>) apply when you use this website, <span class="todo">[insert URL]</span> (<span class="term">Website</span>).</li>
+            <li>You agree to be bound by these Terms which form a binding contractual agreement between you and us, Amanda Cherie Hole ABN 55 487 021 795 operating under the business name ‘Lex Settle’. (<span class="term">Lex Settle</span>, <span class="term">our</span>, <span class="term">we</span> or <span class="term">us</span>).</li>
+            <li>If you don’t agree to these Terms, you must refrain from using the Website.</li>
+            <li>We may change these Terms at any time by updating this page of the Website, and your continued use of the Website following such an update will represent an agreement by you to be bound by the Terms as amended.</li>
+          </ol>
+        </section>
+
+        <section class="cl" id="c2">
+          <h2>Access and use of the website</h2>
+          <p>You must only use the Website in accordance with these Terms and any applicable laws, and must ensure that your employees, sub-contractors and any other agents who use or access the Website comply with the Terms and any applicable laws.</p>
+        </section>
+
+        <section class="cl" id="c3">
+          <h2>Your obligations</h2>
+          <p>You must not:</p>
+          <ol class="lv-a">
+            <li>copy, mirror, reproduce, translate, adapt, vary, modify, sell, decipher or decompile any part or aspect of the Website without the express consent of Lex Settle;</li>
+            <li>use the Website for any purpose other than the purposes of browsing, selecting or purchasing goods;</li>
+            <li>use, or attempt to use, the Website in a manner that is illegal or fraudulent or facilitates illegal or fraudulent activity;</li>
+            <li>use, or attempt to use, the Website in a manner that may interfere with, disrupt or create undue burden on the Website or the servers or networks that host the Website;</li>
+            <li>use the Website with the assistance of any automated scripting tool or software;</li>
+            <li>act in a way that may diminish or adversely impact the reputation of Lex Settle, including by linking to the Website on any other website; and</li>
+            <li>attempt to breach the security of the Website, or otherwise interfere with the normal functions of the Website, including by:
+              <ol class="lv-i">
+                <li>gaining unauthorised access to Website accounts or data;</li>
+                <li>scanning, probing or testing the Website for security vulnerabilities;</li>
+                <li>overloading, flooding, mailbombing, crashing or submitting a virus to the Website; or</li>
+                <li>instigate or participate in a denial-of-service attack against the Website.</li>
+              </ol>
+            </li>
+          </ol>
+        </section>
+
+        <section class="cl" id="c4">
+          <h2>Information on the website</h2>
+          <p>While we make every effort to ensure that the information on the Website is as up-to-date and accurate as possible, you acknowledge and agree that we do not (to the maximum extent permitted by law) guarantee that:</p>
+          <ol class="lv-a">
+            <li>the Website will be free from errors or defects;</li>
+            <li>the Website will be accessible at all times;</li>
+            <li>messages sent through the Website will be delivered promptly, or delivered at all;</li>
+            <li>information you receive or supply through the Website will be secure or confidential; or</li>
+            <li>any information provided through the Website is accurate or true.</li>
+          </ol>
+          <p>We reserve the right to change any information or functionality on the Website by updating the Website at any time without notice, including product descriptions, prices and other Website Content.</p>
+        </section>
+
+        <section class="cl" id="c5">
+          <h2>Intellectual property</h2>
+          <ol class="lv-a">
+            <li>Lex Settle retains ownership of the Website and all materials on the Website (including text, graphics, logos, design, icons, images, sound and video recordings, pricing, downloads and software) (<span class="term">Website Content</span>) and reserves all rights in any intellectual property rights owned or licensed by it not expressly granted to you.</li>
+            <li>You may make a temporary electronic copy of all or part of the Website for the sole purpose of viewing it. You must not otherwise reproduce, transmit, adapt, distribute, sell, modify or publish the Website or any Website Content without prior written consent from Lex Settle or as permitted by law.</li>
+          </ol>
+        </section>
+
+        <section class="cl" id="c6">
+          <h2>Links to other websites</h2>
+          <ol class="lv-a">
+            <li>The Website may contain links to other websites that are not our responsibility. We have no control over the content of the linked websites and we are not responsible for it.</li>
+            <li>Inclusion of any linked website on the Website does not imply our approval or endorsement of the linked website.</li>
+          </ol>
+        </section>
+
+        <section class="cl" id="c7">
+          <h2>Security</h2>
+          <p>Lex Settle does not accept responsibility for loss or damage to computer systems, mobile phones or other electronic devices arising in connection with use of the Website. You should take your own precautions to ensure that the process that you employ for accessing the Website does not expose you to risk of viruses, malicious computer code or other forms of interference.</p>
+        </section>
+
+        <section class="cl" id="c8">
+          <h2>Reporting misuse</h2>
+          <p>If you become aware of misuse of the Website by any person, any errors in the material on the Website or any difficulty in accessing or using the Website, please contact us immediately using the contact details or form provided on our Website.</p>
+        </section>
+
+        <section class="cl" id="c9">
+          <h2>Privacy</h2>
+          <!-- The .docx reads "which can be found <here>." — the stub is kept
+               visible AND wired to the real page, so the client can see the
+               gap while the link already works. -->
+          <p>You agree to be bound by our <a href="privacy-policy.html" class="textlink" style="color: var(--on-field);">Privacy Policy</a>, which can be found <span class="todo">&lt;here&gt;</span>.</p>
+        </section>
+
+        <section class="cl" id="c10">
+          <h2>Liability</h2>
+          <p>We make no warranties or representations about this Website or any of its content and will not be responsible to you or any third party for any direct or consequential loss suffered in connection with the use of this Website. To the maximum extent permitted by law, we exclude any liability that may arise due to your use of our Website and/or the information or materials contained on it. You agree to indemnify us for any loss or liability arising out of your use of this Website.</p>
+        </section>
+
+        <section class="cl" id="c11">
+          <h2>General</h2>
+
+          <section class="cl-2">
+            <h3>Governing law and jurisdiction</h3>
+            <p>This agreement is governed by the law applying in Queensland, Australia. Each party irrevocably submits to the exclusive jurisdiction of the courts of Queensland, Australia and courts of appeal from them in respect of any proceedings arising out of or in connection with this agreement. Each party irrevocably waives any objection to the venue of any legal process on the basis that the process has been brought in an inconvenient forum.</p>
+          </section>
+
+          <section class="cl-2">
+            <h3>Waiver</h3>
+            <p>No party to this agreement may rely on the words or conduct of any other party as a waiver of any right unless the waiver is in writing and signed by the party granting the waiver.</p>
+          </section>
+
+          <section class="cl-2">
+            <h3>Severance</h3>
+            <p>Any term of this agreement which is wholly or partially void or unenforceable is severed to the extent that it is void or unenforceable. The validity and enforceability of the remainder of this agreement is not limited or otherwise affected.</p>
+          </section>
+
+          <section class="cl-2">
+            <h3>Joint and several liability</h3>
+            <p>An obligation or a liability assumed by, or a right conferred on, two or more persons binds or benefits them jointly and severally.</p>
+          </section>
+
+          <section class="cl-2">
+            <h3>Assignment</h3>
+            <p>A party cannot assign, novate or otherwise transfer any of its rights or obligations under this agreement without the prior written consent of the other party.</p>
+          </section>
+
+          <section class="cl-2">
+            <h3>Entire agreement</h3>
+            <p>This agreement embodies the entire agreement between the parties and supersedes any prior negotiation, conduct, arrangement, understanding or agreement, express or implied, in relation to the subject matter of this agreement.</p>
+          </section>
+
+          <section class="cl-2">
+            <h3>Interpretation</h3>
+            <ol class="lv-a">
+              <li>(<span class="term">singular and plural</span>) words in the singular includes the plural (and vice versa);</li>
+              <li>(<span class="term">gender</span>) words indicating a gender includes the corresponding words of any other gender;</li>
+              <li>(<span class="term">defined terms</span>) if a word or phrase is given a defined meaning, any other part of speech or grammatical form of that word or phrase has a corresponding meaning;</li>
+              <li>(<span class="term">person</span>) a reference to “person” or “you” includes an individual, the estate of an individual, a corporation, an authority, an association, consortium or joint venture (whether incorporated or unincorporated), a partnership, a trust and any other entity;</li>
+              <li>(<span class="term">party</span>) a reference to a party includes that party’s executors, administrators, successors and permitted assigns, including persons taking by way of novation and, in the case of a trustee, includes any substituted or additional trustee;</li>
+              <li>(<span class="term">this agreement</span>) a reference to a party, clause, paragraph, schedule, exhibit, attachment or annexure is a reference to a party, clause, paragraph, schedule, exhibit, attachment or annexure to or of this agreement, and a reference to this agreement includes all schedules, exhibits, attachments and annexures to it;</li>
+              <li>(<span class="term">document</span>) a reference to a document (including this agreement) is to that document as varied, novated, ratified or replaced from time to time;</li>
+              <li>(<span class="term">headings</span>) headings and words in bold type are for convenience only and do not affect interpretation;</li>
+              <li>(<span class="term">includes</span>) the word “includes” and similar words in any form is not a word of limitation;</li>
+              <li>(<span class="term">adverse interpretation</span>) no provision of this agreement will be interpreted adversely to a party because that party was responsible for the preparation of this agreement or that provision; and</li>
+              <li>(<span class="term">currency</span>) a reference to $, or “dollar”, is to Australian currency, unless otherwise agreed in writing.</li>
+            </ol>
+          </section>
+
+        </section>
+
+      </div>
+
+      <p class="small legal__back">
+        <a href="index.html" class="textlink">← Back to lexsettle.com</a>
+      </p>
+
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap" style="padding-block: var(--sp-6) var(--sp-4);">
+
+    <div class="grid md:grid-cols-12 gap-x-10 gap-y-10">
+      <div class="md:col-span-5">
+        <a href="index.html" class="logo" aria-label="Lex Settle — home">
+          <img class="logo__img" src="assets/logoWordmarkWhite.svg" alt="" width="142" height="41">
+        </a>
+        <p class="small mt-5 measure" style="color: var(--on-field-faint); max-width: 42ch;">
+          A property pool calculation and collaboration tool for property settlement matters.
+          Not legal advice.
+        </p>
+      </div>
+
+      <nav class="md:col-span-3" aria-label="Footer — product">
+        <p class="label" style="color: var(--on-field-faint);">Product</p>
+        <ul class="grid gap-3 mt-4 list-none p-0 m-0 small">
+          <li><a href="index.html#how-it-works">How it works</a></li>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#who-its-for">Who it's for</a></li>
+          <li><a href="index.html#pricing">Pricing</a></li>
+        </ul>
+      </nav>
+
+      <nav class="md:col-span-4" aria-label="Footer — company">
+        <p class="label" style="color: var(--on-field-faint);">Lex Settle</p>
+        <ul class="grid gap-3 mt-4 list-none p-0 m-0 small">
+          <li><a href="https://app.lexsettle.com/login">Sign in</a></li>
+          <li><a href="https://app.lexsettle.com/register">Create an account</a></li>
+          <li><a href="website-terms.html">Website terms</a></li>
+          <li><a href="app-terms.html">App terms &amp; conditions</a></li>
+          <li><a href="privacy-policy.html">Privacy policy</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="flex flex-wrap gap-x-6 gap-y-2 justify-between items-center small"
+         style="margin-top: var(--sp-6); padding-top: var(--sp-3); border-top: 1px solid rgba(255,255,255,.12); color: var(--on-field-faint);">
+      <p>© 2026 Lex Settle. All rights reserved.</p>
+      <p>lexsettle.com &nbsp;·&nbsp; lexsettle.com.au</p>
+    </div>
+
+  </div>
+</footer>
+
+</div><!-- /page -->
+
+<script src="assets/site.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,274 @@
+/* ==========================================================================
+   LEX SETTLE — LEGAL DOCUMENT PAGES
+   ==========================================================================
+   Loaded after assets/base.css by website-terms.html, app-terms.html and
+   privacy-policy.html. Tokens all come from base.css; nothing is redefined
+   here.
+
+   WHAT THIS PAGE TYPE IS
+   A legal document is the one thing on this site nobody reads for pleasure
+   and everybody has to be able to read. So it inherits the field — the page
+   still belongs to the same world — but it does NOT put body copy directly
+   on it. See the contrast note on .sheet below.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. THE SHEET — a frosted slab over the field
+   ==========================================================================
+   THE CONTRAST ARGUMENT, because this is the whole reason the sheet exists
+   rather than setting the clauses straight onto the field like the hero copy.
+
+   base.css documents the field's contract: the brightest pixel it can emit is
+   --field-peak, and --on-field-soft measures 4.70:1 there. That clears AA and
+   nothing more — fine for a 20-word hero bullet you read once, not fine for
+   fourteen thousand words of clause text, and it leaves no margin at all if
+   the palette is ever nudged.
+
+   The sheet takes that variable ground and bounds it. Compositing
+   rgba(12,21,38,.78) over the field's two extremes:
+
+     over --field-peak  #3A66B2  ->  rgb(22,39,69),  L = 0.0205
+     over --field-trough #04081A ->  rgb(11,19,35),  L = 0.0062
+
+   which puts --on-field-soft between 12.4:1 and 15.9:1 wherever the fold
+   happens to fall, and white above both. The document is legible by
+   construction rather than by luck, and the field still shows through as
+   movement behind the glass.
+
+   The alpha is doing the contrast work and the blur is doing the look, which
+   is the right way round: where backdrop-filter is unsupported the page loses
+   the blur and keeps every one of those ratios. No @supports fallback needed
+   for that reason. */
+.sheet {
+  position: relative;
+  background: rgba(12, 21, 38, .78);
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: var(--r-slab);
+  padding: clamp(1.75rem, 5vw, 4.5rem);
+  box-shadow: var(--shadow-slab);
+  backdrop-filter: blur(28px) saturate(120%);
+  -webkit-backdrop-filter: blur(28px) saturate(120%);
+  color: var(--on-field-soft);
+}
+
+/* Clear of the fixed nav, and of the footer below. */
+.legal { padding-block: clamp(7rem, 12vw, 11rem) var(--field-y); }
+
+/* ==========================================================================
+   2. MASTHEAD
+   ========================================================================== */
+.legal__head { border-bottom: 1px solid rgba(255, 255, 255, .14); padding-bottom: var(--sp-4); }
+/* --fs-display is hero scale and would be shouting on a terms page; this is
+   the h2 step, which is still the largest type on the page. */
+.legal__title { font-size: var(--fs-h2); color: var(--on-field); }
+.legal__meta { color: var(--on-field-faint); }
+
+/* Sibling documents, linked from each other's masthead. The set is small
+   enough that a reader who lands on the wrong one should not have to go back
+   to the footer to find the right one. */
+.legal__siblings { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-3); }
+.legal__siblings a { color: var(--on-field-soft); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.3); }
+.legal__siblings a:hover { color: #fff; border-bottom-color: #fff; }
+.legal__siblings [aria-current="page"] { color: var(--on-field-faint); border-bottom-color: transparent; }
+
+/* ==========================================================================
+   3. CONTENTS
+   ==========================================================================
+   Numbered off the same counter as the document body so the two can never
+   disagree — the list below is generated from the same source of truth by
+   hand, but the NUMBERS are drawn by CSS in both places. */
+.toc { counter-reset: toc; }
+.toc ol { list-style: none; margin: 0; padding: 0; }
+.toc li { counter-increment: toc; }
+.toc a {
+  display: flex; gap: .75rem; min-height: 32px; align-items: baseline;
+  color: var(--on-field-soft); text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.toc a::before {
+  content: counter(toc) ".";
+  color: var(--on-field-faint);
+  font-variant-numeric: tabular-nums;
+  flex: 0 0 1.9rem;
+}
+.toc a:hover { color: #fff; }
+
+/* ==========================================================================
+   4. THE DOCUMENT
+   ==========================================================================
+   NUMBERING IS DRAWN BY CSS COUNTERS, NOT TYPED INTO THE MARKUP, and that is
+   a correctness decision rather than a tidiness one. These documents are
+   still being drafted — the client has flagged several [insert] gaps — so
+   clauses will be added and removed. Hand-typed numbers would silently
+   desynchronise from the dozens of internal cross-references ("in accordance
+   with clause 5.3(a)") the moment one clause moves. With counters, inserting
+   a <section> renumbers everything below it.
+
+   The scheme is read off the source .docx styles and verified against the
+   documents' own cross-references:
+
+     .cl    (L1, section)   1.  2.  3.        — "clause 6"
+     .cl-2  (L2, sub-head)  1.1  1.2          — "clause 3.2"
+     .lv-a  (L4)            (a) (b) (c)       — "clause 4(a)"
+     .lv-i  (L5)            (i) (ii) (iii)
+
+   L3 in the source is the unnumbered body paragraph that sits under a
+   heading, so it is a plain <p> here.
+
+   ONE MARKER COLUMN FOR ALL FOUR LEVELS. --num-col is the width every marker
+   hangs in, so "11.", "11.1", "(a)" and "(iii)" all sit in the same gutter and
+   every piece of clause text in the document shares one left edge. It is sized
+   off the widest marker the scheme can produce — "11.1" in tabular figures —
+   rather than off the narrowest: at 2.75rem the two-part sub-clause numbers ran
+   straight into their own headings. */
+.doc { counter-reset: cl; --num-col: 3.4rem; }
+
+/* The App Terms open with un-numbered welcome copy before clause 1 — plain
+   paragraphs, no marker column, no counter touched. */
+.doc .cl-0 > * + * { margin-top: var(--sp-2); }
+.doc .cl-0 + .cl { margin-top: var(--sp-4); }
+
+.doc .cl { counter-increment: cl; counter-reset: cl2 lva; }
+.doc .cl > h2 {
+  font-size: var(--fs-h3);
+  color: var(--on-field);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  position: relative;
+  padding-left: var(--num-col);
+}
+.doc .cl > h2::before {
+  content: counter(cl) ".";
+  position: absolute; left: 0;
+  color: var(--on-field-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.doc .cl-2 { counter-increment: cl2; counter-reset: lva; }
+.doc .cl-2 > h3 {
+  font-size: var(--fs-body);
+  color: var(--on-field);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-weight: 600;
+  position: relative;
+  padding-left: var(--num-col);
+}
+.doc .cl-2 > h3::before {
+  content: counter(cl) "." counter(cl2);
+  position: absolute; left: 0;
+  color: var(--on-field-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.doc p { max-width: 78ch; }
+/* One rule for every gap inside a clause — heading to paragraph, paragraph to
+   list, list to trailing paragraph. Written as `* + *` rather than as a set of
+   pairs because the source documents interleave those three in every order,
+   and a pair list would keep growing a missing case. */
+.doc .cl > * + *,
+.doc .cl-2 > * + *,
+.doc .schedule > * + * { margin-top: var(--sp-2); }
+/* Clause-to-clause is the document's real paragraph break, so it outranks the
+   rule above; both are (0,2,0), so this has to come after it. */
+.doc .cl + .cl,
+.doc .cl > .cl-2 { margin-top: var(--sp-4); }
+
+/* --- Numbered lists. Hanging indent so the clause text forms one left edge
+       and the markers sit in the margin, which is how a printed deed sets and
+       what makes a nested (a)/(i) structure scannable at all. --- */
+.doc ol { list-style: none; margin: 0; padding: 0; max-width: 78ch; }
+.doc ol > li { position: relative; padding-left: var(--num-col); }
+.doc ol > li + li { margin-top: var(--sp-2); }
+.doc ol > li::before {
+  position: absolute; left: 0;
+  color: var(--on-field-faint);
+  font-variant-numeric: tabular-nums;
+}
+.doc .lv-a > li { counter-increment: lva; counter-reset: lvi; }
+.doc .lv-a > li::before { content: "(" counter(lva, lower-alpha) ")"; }
+.doc .lv-i > li { counter-increment: lvi; counter-reset: lvA; }
+.doc .lv-i > li::before { content: "(" counter(lvi, lower-roman) ")"; }
+/* A fourth level, reached exactly once — Privacy Policy clause 6(b)(i), the
+   breakdown of "assets, debts and liabilities". Upper-alpha because it is the
+   only marker left that cannot be confused with the three above it. */
+.doc .lv-A > li { counter-increment: lvA; }
+.doc .lv-A > li::before { content: "(" counter(lvA, upper-alpha) ")"; }
+/* A nested list is part of its parent item, so it indents from the parent's
+   text edge rather than restarting at the margin. */
+.doc li > ol { margin-top: var(--sp-2); }
+/* Unnumbered tail text that belongs to the list above it — "(together, the
+   Account Holders)", "whichever is earlier" — set to the list's text edge. */
+.doc .lv-tail { padding-left: var(--num-col); margin-top: var(--sp-2); }
+
+.doc strong, .doc b { color: var(--on-field); font-weight: 600; }
+/* Defined terms. The source documents define these in bold-in-brackets on
+   first use and then rely on the capital; keeping them visually distinct is
+   the reader's only index. */
+.doc .term { color: var(--on-field); font-weight: 600; }
+
+/* --- Definition tables --- */
+.doc table {
+  width: 100%; border-collapse: collapse; margin-top: var(--sp-3);
+  font-size: var(--fs-small);
+}
+.doc caption { text-align: left; color: var(--on-field-faint); padding-bottom: var(--sp-1); }
+.doc th, .doc td {
+  text-align: left; vertical-align: top;
+  padding: var(--sp-2) var(--sp-2) var(--sp-2) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+}
+.doc th {
+  color: var(--on-field); font-weight: 600;
+  width: 30%; min-width: 11rem;
+  padding-right: var(--sp-3);
+}
+.doc thead th { font-size: var(--fs-label); text-transform: uppercase; letter-spacing: var(--tr-label); color: var(--on-field-faint); }
+/* Below the fold of a phone a two-column table of definitions is two words
+   per line, so it stacks into term-then-definition blocks. */
+@media (max-width: 599px) {
+  .doc table, .doc tbody, .doc tr, .doc th, .doc td { display: block; width: auto; }
+  .doc thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .doc tr + tr { margin-top: var(--sp-3); }
+  .doc tbody th { border-bottom: 0; padding-bottom: 0; }
+  .doc tbody td { padding-top: var(--sp-1); }
+}
+
+/* --- Schedules (the App Terms carry an EULA as Schedule 1) ---
+       Restarts the clause counter, because the schedule numbers its own
+       clauses from 1 and its cross-references point inside itself. */
+.doc .schedule { counter-reset: cl; margin-top: var(--sp-7); padding-top: var(--sp-5); border-top: 1px solid rgba(255,255,255,.18); }
+.doc .schedule > h2 { font-size: var(--fs-h3); color: var(--on-field); }
+
+/* ==========================================================================
+   5. DRAFTING GAPS
+   ==========================================================================
+   The supplied documents contain unfilled [insert] placeholders and two
+   <here> cross-reference stubs. These are marked rather than quietly dropped
+   or invented: this page is the artefact the client will proofread, and a
+   placeholder that looks like body copy is a placeholder that ships. */
+.todo {
+  display: inline-block;
+  padding: .1em .5em;
+  border-radius: 5px;
+  background: rgba(234, 179, 8, .18);
+  border: 1px dashed rgba(250, 204, 21, .65);
+  color: #FDE68A;
+  font-size: .92em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.legal__notice {
+  margin-top: var(--sp-4);
+  padding: var(--sp-3);
+  border-radius: 14px;
+  background: rgba(234, 179, 8, .1);
+  border: 1px solid rgba(250, 204, 21, .35);
+  color: var(--on-field-soft);
+}
+.legal__notice strong { color: #FDE68A; }
+
+/* ==========================================================================
+   6. BACK TO TOP
+   ========================================================================== */
+.legal__back { margin-top: var(--sp-5); padding-top: var(--sp-3); border-top: 1px solid rgba(255,255,255,.14); }
