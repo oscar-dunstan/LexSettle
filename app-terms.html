@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  LEX SETTLE — APP TERMS AND CONDITIONS
+  ============================================================================
+  Set verbatim from the client's .docx. Clause text is transcribed word for
+  word, including every [insert] gap, which is marked with .todo rather than
+  filled in or removed — see assets/legal.css section 5.
+
+  Clause numbers are drawn by CSS counters, not typed. See assets/legal.css
+  section 4 for the scheme and how it was verified.
+
+  The nav and footer below are generated from website-terms.html so all three
+  legal pages carry identical chrome.
+  ============================================================================
+-->
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>App Terms and Conditions — Lex Settle</title>
+<meta name="description" content="The terms and conditions that govern your subscription to and use of the Lex Settle platform, including the End User Licence Agreement.">
+<!-- Draft legal copy with unfilled placeholders: keep it out of search results
+     until the client has signed it off. -->
+<meta name="robots" content="noindex">
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#0C1526">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+<!-- Same Tailwind CDN as index.html: the shared nav and footer markup below is
+     copied from the homepage and uses its spacing/grid utilities. -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/legal.css">
+</head>
+
+<body>
+
+<!-- The same field as the homepage, from base.css + site.js. -->
+<div class="field" id="field" aria-hidden="true">
+  <div class="field__blob field__blob--b"></div>
+  <div class="field__blob field__blob--a"></div>
+  <div class="field__blob field__blob--d"></div>
+  <div class="field__blob field__blob--c"></div>
+  <div class="field__blob field__blob--e"></div>
+  <canvas class="field__gl" id="field-gl"></canvas>
+  <div class="field__grain"></div>
+</div>
+
+<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:z-[80] focus:top-4 focus:left-4 focus:bg-white focus:text-ink focus:px-4 focus:py-3 focus:rounded-xl focus:font-semibold">Skip to content</a>
+
+<div class="page">
+
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="logo" aria-label="Lex Settle — home">
+      <img class="logo__img logo__img--light" src="assets/logoWordmarkWhite.svg" alt="" width="142" height="41">
+      <img class="logo__img logo__img--dark" src="assets/logoWordmarkColour.svg" alt="" width="142" height="41">
+    </a>
+
+    <nav class="nav__links" aria-label="Primary">
+      <a class="nav__link" href="index.html#how-it-works">How it works</a>
+      <a class="nav__link" href="index.html#features">Features</a>
+      <a class="nav__link" href="index.html#who-its-for">Who it's for</a>
+      <a class="nav__link" href="index.html#pricing">Pricing</a>
+    </nav>
+
+    <div class="nav__actions">
+      <a class="nav__signin" href="https://app.lexsettle.com/login">Sign in</a>
+      <a class="btn btn--light" href="https://app.lexsettle.com/register">Get started</a>
+      <button class="navtoggle" id="navtoggle" aria-expanded="false" aria-controls="navpanel" aria-label="Open menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <line class="navicon__l navicon__l--t" x1="3" y1="6"  x2="17" y2="6"/>
+          <line class="navicon__l navicon__l--m" x1="3" y1="10" x2="17" y2="10"/>
+          <line class="navicon__l navicon__l--b" x1="3" y1="14" x2="17" y2="14"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="navpanel" id="navpanel">
+    <a href="index.html#how-it-works">How it works</a>
+    <a href="index.html#features">Features</a>
+    <a href="index.html#who-its-for">Who it's for</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a href="https://app.lexsettle.com/login">Sign in</a>
+    <a class="btn btn--primary" href="https://app.lexsettle.com/register">Get started</a>
+  </div>
+</header>
+
+<main id="main" class="legal">
+  <div class="wrap" style="max-width: 62rem;">
+    <article class="sheet">
+
+      <header class="legal__head">
+        <p class="label" style="color: var(--on-field-faint);">Lex Settle</p>
+        <h1 class="legal__title mt-3">App terms and conditions</h1>
+        <p class="small legal__meta mt-4">These terms govern your subscription to and use of the Lex Settle platform. Schedule 1 sets out the End User Licence Agreement that applies to everyone who accesses it.</p>
+        <nav class="legal__siblings small mt-5" aria-label="Legal documents">
+          <a href="website-terms.html">Website terms</a>
+          <a href="app-terms.html" aria-current="page">App terms &amp; conditions</a>
+          <a href="privacy-policy.html">Privacy policy</a>
+        </nav>
+      </header>
+
+      <nav class="toc mt-8" aria-labelledby="toc-h">
+        <p class="label" id="toc-h" style="color: var(--on-field-faint);">Contents</p>
+        <ol class="mt-3">
+          <li><a href="#c1">Introduction</a></li>
+          <li><a href="#c2">Disclaimer</a></li>
+          <li><a href="#c3">Platform</a></li>
+          <li><a href="#c4">Account registration and guest user access</a></li>
+          <li><a href="#c5">Fees</a></li>
+          <li><a href="#c6">Your obligations</a></li>
+          <li><a href="#c7">Refunds</a></li>
+          <li><a href="#c8">Your content</a></li>
+          <li><a href="#c9">Third party content &amp; links</a></li>
+          <li><a href="#c10">Operation of the app dependent on third parties</a></li>
+          <li><a href="#c11">Service limitations</a></li>
+          <li><a href="#c12">Security</a></li>
+          <li><a href="#c13">Limitation of liability</a></li>
+          <li><a href="#c14">Cancellation</a></li>
+          <li><a href="#c15">Confidentiality and privacy</a></li>
+          <li><a href="#c16">Location of platform</a></li>
+          <li><a href="#c17">Notices</a></li>
+          <li><a href="#c18">General</a></li>
+          <li><a href="#c19">Definitions</a></li>
+        </ol>
+      </nav>
+
+      <div class="doc mt-8">
+
+        <!-- The .docx opens with un-numbered welcome copy before clause 1.
+             Kept outside .doc's counter so it does not consume clause 1. -->
+        <section class="cl-0">
+          <p>Welcome to Lex Settle!</p>
+          <p>To make it easier for you to understand the terms on which we provide our Platform, we’ve tried to keep these terms of use (<span class="term">Terms</span>) as simple as possible by using plain English.</p>
+          <p>These Terms apply to our web and mobile application which facilitates property settlement negotiations in family divorce and separation matters, as further described on our website at <span class="todo">[insert website URL]</span> (<span class="term">Platform</span>). We’ve set out these Terms to govern your subscription to Platform (<span class="term">Subscription</span>).</p>
+          <p>When we talk about “Lex Settle”, “we,” “our,” or “us” in these Terms, we are referring to Amanda Cherie Hole ABN 55 487 021 795 operating under the business name ‘Lex Settle’.</p>
+          <p>We’ve also used a few other capitalised words and phrases as shorthand to refer to recurring concepts. Each of these are defined in bold and in brackets after the concepts are first mentioned.</p>
+          <p>By clicking the tick box below, paying for your Subscription or otherwise accepting the benefit of any part of the Platform, you agree to be bound by these Terms which form a binding contractual agreement between you or the company you represent (<span class="term">you</span>) and Lex Settle. You represent and warrant that you have valid authority to enter into these Terms on behalf of any entity you may represent.</p>
+        </section>
+
+        <section class="cl" id="c1">
+          <h2>Introduction</h2>
+          <p>By using the Platform or otherwise engaging with the content on the Platform, you represent and warrant that you:</p>
+          <ol class="lv-a">
+            <li>are at least 18 years old, have the legal capacity to enter into a binding legal agreement with us and you agree to be bound by these Terms; or</li>
+            <li>are the parent or legal guardian of a person under the age of 18 who intends to use the Platform, and you agree to be bound by these Terms on that person’s behalf.</li>
+          </ol>
+          <p>Please have a careful read through these Terms before using the Platform. If you don’t agree to these Terms, please don’t use the Platform.</p>
+          <p>We may modify our Terms from time to time. If we do, we will post a note on this page or email you. If you continue to use the Platform after we modify our Terms, you’ll be taken to have agreed to the Terms as modified.</p>
+        </section>
+
+        <section class="cl" id="c2">
+          <h2>Disclaimer</h2>
+          <section class="cl-2">
+            <h3>General</h3>
+            <p>You acknowledge and agree that the Platform is a tool designed to identify, organise and structure data in order to simplify property settlement negotiations in family divorce and separation matters.</p>
+          </section>
+          <section class="cl-2">
+            <h3>Not legal or financial advice</h3>
+            <ol class="lv-a">
+              <li>All information provided by Lex Settle as part of the Platform is general information.</li>
+              <li>This information is based on information and documentation you provide to Lex Settle.</li>
+              <li>No information provided as part of the Platform is intended to be legal or financial advice of any kind and it should not be relied on as such.</li>
+              <li>You should obtain specific financial, legal or other professional advice before relying on the Platform. By not seeking such advice, you accept the risk that the information provided as part of the Platform may not meet the specific needs of your business.</li>
+            </ol>
+          </section>
+          <section class="cl-2">
+            <h3>No guaranteed outcome</h3>
+            <p>Lex Settle does not guarantee any particular outcome, or any particular decision from any authority on any issue, from your reliance on the Platform.</p>
+          </section>
+        </section>
+
+        <section class="cl" id="c3">
+          <h2>Platform</h2>
+          <section class="cl-2">
+            <h3>Licence</h3>
+            <ol class="lv-a">
+              <li>(<span class="term">Our Intellectual Property</span>) We retain ownership or a licence to the Platform and all Platform Content and reserve all rights in any Intellectual Property Rights owned or licensed by us not expressly granted to you.</li>
+              <li>(<span class="term">Platform Licence</span>) While you maintain a Subscription, we grant to you a non-exclusive, non-transferable and revocable licence to use the Platform.</li>
+              <li>(<span class="term">Platform Content Licence</span>) You are granted a licence to the Platform Content while you maintain a Subscription, and you may make a temporary electronic copy of all or part of any materials provided to you for the sole purpose of viewing them and using them for the purposes of Platform. You must not otherwise reproduce, transmit, adapt, distribute, sell, modify or publish those materials or any Platform Content without prior written consent from us or as otherwise permitted by law.</li>
+            </ol>
+          </section>
+          <section class="cl-2">
+            <h3>Support</h3>
+            <p>We will provide you with support where necessary to resolve technical issues with the Platform (<span class="term">Support Services</span>), the following terms apply unless otherwise specifically agreed in writing:</p>
+            <ol class="lv-a">
+              <li>We will take reasonable steps to provide Support Services where necessary. You must first endeavour to resolve any issues with the Platform yourself and we will not assist with issues that are beyond our reasonable control.</li>
+              <li>You are responsible for all internal administration and managing access, including storing back-up passwords.</li>
+              <li>You will not have any claim for delay to your access to the Platform due to any failure or delay in Support Services.</li>
+            </ol>
+          </section>
+          <section class="cl-2">
+            <h3>Enhancements</h3>
+            <p>We may from time to time in our absolute discretion release enhancements to the Platform, where enhancements means any upgraded, improved, modified or new versions of the Platform. Any enhancements to the Platform will not limit or otherwise affect these Terms. Enhancements may cause downtime or delays from time to time, and credits will not be provided for such downtime.</p>
+          </section>
+        </section>
+
+        <section class="cl" id="c4">
+          <h2>Account registration and guest user access</h2>
+          <ol class="lv-a">
+            <li>You will be required to sign up for an account (<span class="term">Account</span>) if you are:
+              <ol class="lv-i">
+                <li>an administrator accessing the Platform on behalf of a law firm, company, business, sole trader, organisation (<span class="term">Business User</span>); or</li>
+                <li>an individual who is invited to register an Account on the Platform by a Business User (<span class="term">Individual User</span>),</li>
+              </ol>
+              <p class="lv-tail">(together, the <span class="term">Account Holders</span>).</p>
+            </li>
+            <li>If an Account Holder sends you a link to access the Platform for the sole purpose of accepting, rejecting or making comments on an offer generated in the Platform (<span class="term">Guest User</span>), you will not be required to register an Account, but you may be required to provide personal information such as your name and date of birth.</li>
+            <li>If you register an Account as a Business User, you must pay the fees in accordance with clause 5.</li>
+            <li>When you register for an Account or access the Platform as a Guest User, you must provide true, accurate and complete information as requested and keep this information up to date after registration.</li>
+            <li>You agree that you’re solely responsible for:
+              <ol class="lv-i">
+                <li>if you are Account Holder, maintaining the confidentiality and security of your Account information and your password;</li>
+                <li>any activities and those of any third party that occur through your Account or your access as a Guest User, whether those activities have been authorised by you or not; and</li>
+                <li>you also agree to let us know if you detect any unusual activity on the Platform (whether on your Account or when you access the Platform as a Guest User) as soon as you become aware of it.</li>
+              </ol>
+            </li>
+            <li>We won’t be responsible to you for, and expressly disclaim any liability for, any cost, loss, damages or expenses arising out of a failure by you to maintain the security of your Account information or your password.</li>
+          </ol>
+        </section>
+
+        <section class="cl" id="c5">
+          <h2>Fees</h2>
+          <section class="cl-2">
+            <h3>General</h3>
+            <p>This clause 5 only applies if you are a Business User and you register an Account in accordance with clause 3 of these Terms.</p>
+          </section>
+          <section class="cl-2">
+            <h3>Trial</h3>
+            <p>We offer a no cost trial which will allow you to access our Platform for a period of <span class="todo">[insert]</span> weeks (<span class="term">Trial</span>). If at the end of the Trial, you do not make a payment, then your Trial will end. If you wish to continue using our Platform, you must make a payment as set out in clause 5.3.</p>
+          </section>
+          <section class="cl-2">
+            <h3>Subscription</h3>
+            <ol class="lv-a">
+              <li>The Platform is only available after the Trial via a paid subscription (<span class="term">Subscription</span>). We may also have different subscription periods (<span class="term">Subscription Period</span>). Details of Subscriptions as well as the associated fee for each (<span class="term">Subscription Fees</span>) will be set out on our Website.</li>
+              <li>The Subscription Fees may be paid via the Website or as otherwise notified by us to you, depending on our current prices and billing processes.</li>
+              <li>Once you subscribe to the Platform, your Subscription will continue to renew automatically at the end of each Subscription Period, and you will continue to be charged Subscription Fees unless you cancel your Subscription in accordance with clause 14</li>
+            </ol>
+          </section>
+          <section class="cl-2">
+            <h3>Subscription fees and payment</h3>
+            <ol class="lv-a">
+              <li>(<span class="term">When Subscription Fees are due</span>) You must pay the Subscription Fee at the beginning of each Subscription Period. You may choose your preferred Subscription Period via the Platform.</li>
+              <li>(<span class="term">Automatic recurring billing</span>) Your Subscription will continue to renew after the end of each Subscription Period, indefinitely, and you must pay Subscription Fees in respect of each Subscription Period in advance, unless you notify us before the end of the then current Subscription Period that you want to cancel your Subscription. Otherwise, we will continue to automatically charge the Subscription Fees from your nominated account at the beginning of each Subscription Period. We will not pay any charge back amount if you fail to cancel your Subscription. You acknowledge that your Subscription has an initial and recurring payment feature and you accept responsibility for all recurring charges prior to your cancellation of your Subscription.</li>
+              <li>(<span class="term">Failure to pay</span>) If Subscription Fees are not paid when they are due, we may revoke your Account and require payment for you to continue accessing the Platform.</li>
+              <li>(<span class="term">Third Party Payment Provider</span>) We use third-party payment providers (<span class="term">Payment Provider</span>) to collect Subscription Fees. The processing of payments by the Payment Provider will be, in addition to these terms, subject to the terms, conditions and privacy policies of the Payment Provider and we are not liable for the security or performance of the Payment Provider. We reserve the right to correct, or to instruct our Payment Provider to correct, any errors or mistakes in collecting your payment.</li>
+              <li>(<span class="term">Credit card surcharges</span>) We reserve the right to charge credit card surcharges in the event payments are made using a credit, debit or charge card (including Visa, MasterCard or American Express).</li>
+              <li>(<span class="term">Changes to Subscription Fees</span>) We reserve the right, from time to time, to change the Subscription Fees. We will notify you in advance if we do this.</li>
+            </ol>
+          </section>
+        </section>
+
+        <section class="cl" id="c6">
+          <h2>Your obligations</h2>
+          <ol class="lv-a">
+            <li>You must comply with these Terms at all times. You acknowledge and agree that we will have no liability in respect of any damage, loss or expense which arises in connection with your breach of these Terms, and you indemnify us in respect of any such damage, loss or expense.</li>
+            <li>You must ensure that all Users are made aware of, agree to and comply with the End User Licence Agreement in Schedule 1 prior to using the Platform. You must comply with these Terms at all times. You acknowledge and agree that we will have no liability in respect of any damage, loss or expense which arises in connection with your breach of these Terms, and you indemnify us in respect of any such damage, loss or expense.</li>
+            <li>You must not, and must not encourage or permit any third party to, without our prior written approval:
+              <ol class="lv-i">
+                <li>share your Account information with any other person and that any use of your Account by any other person is strictly prohibited. You must immediately notify us of any unauthorised use of your account, password or email, or any other breach or potential breach of the Platform’s security;</li>
+                <li>use the Platform for any purpose other than for the purpose for which it was designed, including you must not use the Platform in a manner that is illegal or fraudulent or facilitates illegal or fraudulent activity (including requesting or accepting a job which includes illegal activities or purposes);</li>
+                <li>act in any way that may harm our reputation or that of associated or interested parties or do anything at all contrary to the interests of us or the Platform;</li>
+                <li>make any automated use of the Platform and you must not copy, reproduce, translate, tamper, adapt, vary or modify the Platform in any way;</li>
+                <li>remove or alter any copyright, trade mark or other notice on or forming part of the Platform;</li>
+                <li>create derivative works from or translate the Platform;</li>
+                <li>publish or otherwise communicate the Platform to the public, including by making it available online or sharing it with third parties;</li>
+                <li>sell, loan, transfer, sub-licence, hire or otherwise dispose of the Platform to any third party;</li>
+                <li>decompile or reverse engineer the Platform or any part of it, or otherwise attempt to derive its source code; or</li>
+                <li>attempt to circumvent any technological protection mechanism or other security feature of the Platform.</li>
+              </ol>
+            </li>
+            <li>You agree:
+              <ol class="lv-i">
+                <li>that we may change any features of the Platform at any time on notice to you;</li>
+                <li>that information given to you through the Platform by us is general in nature and we take no responsibility for anything caused by any actions you take in reliance on that information; and</li>
+                <li>that we may cancel your Account at any time if we consider, in our absolute discretion, that you are in breach or are likely to breach this clause 6.</li>
+              </ol>
+            </li>
+            <li>You grant to us (and our Personnel) a non-exclusive, royalty free, non-transferable, worldwide and irrevocable licence to use User Data to the extent reasonably required to provide the Platform.</li>
+          </ol>
+        </section>
+
+        <section class="cl" id="c7">
+          <h2>Refunds</h2>
+          <p>Except as otherwise set out on our website, we generally don’t offer refunds for any of our Subscriptions and any refunds we issue will be solely at our discretion. Please let us know if you have any issues with our Platform that you think should entitle you to a refund and we’ll consider your situation.</p>
+        </section>
+
+        <section class="cl" id="c8">
+          <h2>Your content</h2>
+          <section class="cl-2">
+            <h3>Types of content</h3>
+            <p>As part of using the Platform, you’ll be uploading images, content, information and materials you share with us or the public (including feedback, suggestions and enhancement requests), including by using the features of the app, sharing content via the app on social media or by contacting us, or when you register an Account (<span class="term">Posted Materials</span>).</p>
+          </section>
+          <section class="cl-2">
+            <h3>Posted materials</h3>
+            <p>By providing or posting any Posted Materials, you represent and warrant that:</p>
+            <ol class="lv-a">
+              <li>you are authorised to provide the Posted Materials;</li>
+              <li>the Posted Materials are free from any harmful, discriminatory, defamatory or maliciously false implications and do not contain any offensive or explicit material;</li>
+              <li>the Posted Materials are not “passing off” of any product or service and does not constitute unfair competition;</li>
+              <li>the Posted Materials do not infringe any Intellectual Property Rights;</li>
+              <li>the Posted Materials are accurate and true at the time they are provided;</li>
+              <li>any Posted Materials which are in the form of a review or feedback is honest, accurate and presents a fair view of the relevant person and/or your experience;</li>
+              <li>the Posted Materials do not contain any viruses or other harmful code, or otherwise compromise the security or integrity of any network or system; and</li>
+              <li>the Posted Materials do not breach or infringe any applicable laws, regulations or orders.</li>
+            </ol>
+          </section>
+          <section class="cl-2">
+            <h3>Posted materials &ndash; IP licence</h3>
+            <p>By uploading any Posted Materials, you grant to Lex Settle (and its agents or service providers) a perpetual, irrevocable, transferable, worldwide and royalty-free licence (including the right to sublicense) to use, copy, modify, reproduce and adapt any Intellectual Property Rights in that Posted Material in order for Lex Settle to use, exploit or otherwise enjoy the benefit of such Posted Material.</p>
+          </section>
+          <section class="cl-2">
+            <h3>Removal of posted materials</h3>
+            <p>We don’t have any obligations to screen Posted Materials in advance of them being posted and your compliance with these Terms is your responsibility. However, we may, if we choose, review and remove any Posted Materials at any time without giving any explanation or justification for removing the material and/or information.</p>
+          </section>
+        </section>
+
+        <section class="cl" id="c9">
+          <h2>Third party content &amp; links</h2>
+          <p>The Platform may contain text, images, data and other content provided by a third party (<span class="term">Third Party Content</span>). We’re not responsible for any of this Third Party Content and we make no representation or warranty about the quality, suitability, accuracy, reliability, currency or completeness of any Third Party Content.</p>
+          <p>The Platform may also contain links to websites operated by third parties (<span class="term">Third Party Links</span>). Third Party Links are provided for convenience and may not remain current or be maintained. We do not endorse and are not responsible for Third Party Links and have no control over or rights in linked websites.</p>
+        </section>
+
+        <section class="cl" id="c10">
+          <h2>Operation of the app dependent on third parties</h2>
+          <p>You acknowledge that the Platform is dependent on software and hardware developed by third party providers such as <span class="todo">[insert]</span>. If following an update by such third party provider, the Platform can no longer function as they did prior to the update, we will not (to the maximum extent permitted by law) be liable to you for any loss or damage you might suffer as a result.</p>
+        </section>
+
+        <section class="cl" id="c11">
+          <h2>Service limitations</h2>
+          <p>The Platform is made available to you strictly on an ‘as is’ basis. We can’t guarantee, and make no warranties, to the extent permitted by law, that:</p>
+          <ol class="lv-a">
+            <li>the Platform will be free from errors or defects;</li>
+            <li>the Platform will be accessible or available at all times;</li>
+            <li>messages sent through the Platform will be delivered promptly, or delivered at all;</li>
+            <li>information you receive or supply through the Platform will be secure or confidential; or</li>
+            <li>any information provided through the Platform is accurate or true.</li>
+          </ol>
+        </section>
+
+        <section class="cl" id="c12">
+          <h2>Security</h2>
+          <p>We do not accept responsibility for any unauthorised use, destruction, loss, damage or alteration to your data or information (including Posted Materials), your computer systems, mobile phones or other electronic devices arising in connection with use of the Platform. You should take your own precautions to ensure that the process which you employ for accessing the Platform does not expose you to the risk of hacking, malware, ransomware, viruses, malicious computer code or other forms of interference.</p>
+        </section>
+
+        <section class="cl" id="c13">
+          <h2>Limitation of liability</h2>
+          <p>To the maximum extent permitted by applicable law, Lex Settle limits all liability to any person for loss or damage of any kind, however arising whether in contract, tort (including negligence), statute, equity, indemnity or otherwise, arising from or relating in any way to the Platform to:</p>
+          <ol class="lv-a">
+            <li>if you have paid Subscription Fees, the total Subscription Fees paid by you in the month preceding the date of the first event giving rise to the relevant loss or damage; or</li>
+            <li>if you have not paid any Subscription Fees to Lex Settle, to $100 (AUD) in aggregate.</li>
+          </ol>
+          <p>This includes the transmission of any computer virus.</p>
+          <p>You agree to indemnify Lex Settle and its employees, contractors and agents in respect of all liability for loss, damage or injury which may be suffered by any person arising from, or in connection with, you or your representatives use of the Platform and/or breach of these Terms.</p>
+          <p>All express or implied representations and warranties given by us are, to the maximum extent permitted by applicable law, excluded.</p>
+          <p>Nothing in this agreement is intended to limit the operation of the Australian Consumer Law contained in the <em>Competition and Consumer Act 2010</em> (Cth) (<span class="term">ACL</span>). Under the ACL, you may be entitled to certain remedies (like a refund, replacement or repair) if there is a failure with the goods or Platform we provide.</p>
+          <p>To the maximum extent permitted by law, under no circumstances will Lex Settle be liable for any incidental, special or consequential loss or damages, or damages for loss of data, business or business opportunity, goodwill, anticipated savings, profits or revenue arising under or in connection with the Platform, these Terms or their subject matter (except to the extent this liability cannot be excluded under the <em>Competition and Consumer Act 2010</em> (Cth)).</p>
+        </section>
+
+        <section class="cl" id="c14">
+          <h2>Cancellation</h2>
+          <section class="cl-2">
+            <h3>Cancellation by you</h3>
+            <p>You are responsible for the cancellation of your Account. You can cancel your Account at any time by using the functionality provided in the Platform.</p>
+          </section>
+          <section class="cl-2">
+            <h3>Cancellation by us</h3>
+            <p>To the extent permitted by law, we reserve the right to terminate your access to any or all of the Platform or any part of the Platform at any time without notice, for any reason, provided that we refund to you any Fees for Platform which you have paid for and not received.</p>
+            <p>We may also terminate your access to any or all of the Platform at any time without notice without issuing a refund if you breach any provision of these Terms.</p>
+          </section>
+          <section class="cl-2">
+            <h3>Effect of cancellation</h3>
+            <p>Upon cancellation, termination or expiry of your Account, we will delete any Posted Materials associated with your Account. You won’t be able to recover any of this after cancellation, termination or expiry of your Account so we recommend you back up anything important to you. We won’t be responsible to you for, and expressly disclaim any liability for, any cost, loss, damages or expenses arising out the cancellation, termination or expiry of your Account.</p>
+          </section>
+          <section class="cl-2">
+            <h3>Survival</h3>
+            <p>Any clause that by its nature would reasonably be expected to be performed after the termination or expiry of this agreement will survive and be enforceable after such termination or expiry.</p>
+          </section>
+        </section>
+
+        <section class="cl" id="c15">
+          <h2>Confidentiality and privacy</h2>
+          <ol class="lv-a">
+            <li>Except as contemplated by these Terms, you must not use or disclose to any person any Confidential Information disclosed to you by us without our prior written consent.</li>
+            <li>You must promptly notify us if you learn of any potential, actual or suspected loss, misappropriation or unauthorised access to, or disclosure or use of Confidential Information or other compromise of the security, confidentiality, or integrity of Confidential Information.</li>
+            <li>You agree to our <a href="privacy-policy.html" class="textlink" style="color: var(--on-field);">Privacy Policy</a>, located on our Website, which is incorporated into these Terms by reference. Please read the Privacy Policy carefully as it governs our collection, use, and disclosure of personal information.</li>
+          </ol>
+        </section>
+
+        <section class="cl" id="c16">
+          <h2>Location of platform</h2>
+          <p>Lex Settle controls the operation of the Platform from headquarters located in Australia. Some Platform or parts thereof may be operated from, or hosted on mirrors or servers, at various locations outside of Australia.</p>
+          <p>We make no representation or warranty that all of the features of the Platform will be available to you outside of Australia or that they are permitted to be accessed outside Australia.</p>
+          <p>You’re solely responsible for your decision to use the Platform from other locations and you acknowledge that such use may be subject to, and you are responsible for, compliance with applicable local laws in relation to your use of the Platform.</p>
+        </section>
+
+        <section class="cl" id="c17">
+          <h2>Notices</h2>
+          <ol class="lv-a">
+            <li>A notice or other communication to a party under this agreement must be:
+              <ol class="lv-i">
+                <li>in writing and in English; and</li>
+                <li>delivered via email to the other party, to the email address specified in this agreement, or if no email address is specified in this agreement, then the email address most regularly used by the parties to correspond regarding the subject matter of this agreement as at the date of this agreement (<span class="term">Email Address</span>). The parties may update their Email Address by notice to the other party.</li>
+              </ol>
+            </li>
+            <li>Unless the party sending the notice knows or reasonably ought to suspect that an email was not delivered to the other party’s Email Address, notice will be taken to be given:
+              <ol class="lv-i">
+                <li>24 hours after the email was sent, unless that falls on a Saturday, Sunday or a public holiday in the state or territory whose laws govern this agreement, in which case the notice will be taken to be given on the next occurring business day in that state, unless that falls on a Saturday, Sunday or a public holiday in the state or territory whose laws govern this agreement, in which case the notice will be taken to be given on the next occurring business day in that state or territory; or</li>
+                <li>when replied to by the other party,</li>
+              </ol>
+              <p class="lv-tail">whichever is earlier.</p>
+            </li>
+          </ol>
+        </section>
+
+        <section class="cl" id="c18">
+          <h2>General</h2>
+          <section class="cl-2">
+            <h3>Governing law and jurisdiction</h3>
+            <p>This agreement is governed by the law applying in Queensland, Australia. Each party irrevocably submits to the exclusive jurisdiction of the courts of Queensland, Australia and courts of appeal from them in respect of any proceedings arising out of or in connection with this agreement. Each party irrevocably waives any objection to the venue of any legal process on the basis that the process has been brought in an inconvenient forum.</p>
+          </section>
+          <section class="cl-2">
+            <h3>Waiver</h3>
+            <p>No party to this agreement may rely on the words or conduct of any other party as a waiver of any right unless the waiver is in writing and signed by the party granting the waiver.</p>
+          </section>
+          <section class="cl-2">
+            <h3>Severance</h3>
+            <p>Any term of this agreement which is wholly or partially void or unenforceable is severed to the extent that it is void or unenforceable. The validity and enforceability of the remainder of this agreement is not limited or otherwise affected.</p>
+          </section>
+          <section class="cl-2">
+            <h3>Joint and several liability</h3>
+            <p>An obligation or a liability assumed by, or a right conferred on, two or more persons binds or benefits them jointly and severally.</p>
+          </section>
+          <section class="cl-2">
+            <h3>Assignment</h3>
+            <p>A party cannot assign, novate or otherwise transfer any of its rights or obligations under this agreement without the prior written consent of the other party.</p>
+          </section>
+          <section class="cl-2">
+            <h3>Costs</h3>
+            <p>Except as otherwise provided in this agreement, each party must pay its own costs and expenses in connection with negotiating, preparing, executing and performing this agreement.</p>
+          </section>
+          <section class="cl-2">
+            <h3>Entire agreement</h3>
+            <p>This agreement embodies the entire agreement between the parties and supersedes any prior negotiation, conduct, arrangement, understanding or agreement, express or implied, in relation to the subject matter of this agreement.</p>
+          </section>
+          <section class="cl-2">
+            <h3>Interpretation</h3>
+            <ol class="lv-a">
+              <li>(<span class="term">singular and plural</span>) words in the singular includes the plural (and vice versa);</li>
+              <li>(<span class="term">currency</span>) a reference to $; or “dollar” is to Australian currency;</li>
+              <li>(<span class="term">gender</span>) words indicating a gender includes the corresponding words of any other gender;</li>
+              <li>(<span class="term">defined terms</span>) if a word or phrase is given a defined meaning, any other part of speech or grammatical form of that word or phrase has a corresponding meaning;</li>
+              <li>(<span class="term">person</span>) a reference to “person” or “you” includes an individual, the estate of an individual, a corporation, an authority, an association, consortium or joint venture (whether incorporated or unincorporated), a partnership, a trust and any other entity;</li>
+              <li>(<span class="term">party</span>) a reference to a party includes that party’s executors, administrators, successors and permitted assigns, including persons taking by way of novation and, in the case of a trustee, includes any substituted or additional trustee;</li>
+              <li>(<span class="term">this agreement</span>) a reference to a party, clause, paragraph, schedule, exhibit, attachment or annexure is a reference to a party, clause, paragraph, schedule, exhibit, attachment or annexure to or of this agreement, and a reference to this agreement includes all schedules, exhibits, attachments and annexures to it;</li>
+              <li>(<span class="term">document</span>) a reference to a document (including this agreement) is to that document as varied, novated, ratified or replaced from time to time;</li>
+              <li>(<span class="term">headings</span>) headings and words in bold type are for convenience only and do not affect interpretation;</li>
+              <li>(<span class="term">includes</span>) the word “includes” and similar words in any form is not a word of limitation; and</li>
+              <li>(<span class="term">adverse interpretation</span>) no provision of this agreement will be interpreted adversely to a party because that party was responsible for the preparation of this agreement or that provision.</li>
+            </ol>
+          </section>
+        </section>
+
+        <section class="cl" id="c19">
+          <h2>Definitions</h2>
+          <table>
+            <thead><tr><th scope="col">Term</th><th scope="col">Definition</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Account</th><td>has the meaning given in clause 4(a)</td></tr>
+              <tr><th scope="row">Confidential Information</th><td>means information of or provided by a party that is by its nature is confidential information, is designated by that party as confidential, or that the other party knows or ought to know is confidential, but does not include information, which is or becomes, without a breach of confidentiality, public knowledge.</td></tr>
+              <tr><th scope="row">Intellectual Property Rights</th><td>means any and all present and future intellectual and industrial property rights throughout the world (whether registered or unregistered), including copyright, trade marks, designs, patents, moral rights, semiconductor and circuit layout rights, trade, business, company and domain names, and other proprietary rights, trade secrets, know-how, technical data, confidential information and the right to have information kept confidential, or any rights to registration of such rights (including renewal), whether created before or after the date of this agreement.</td></tr>
+              <tr><th scope="row">Personnel</th><td>means, in respect of a party, its officers, employees, contractors (including subcontractors) and agents.</td></tr>
+              <tr><th scope="row">Platform Content</th><td>means all materials owned or licensed by us in connection with Platform and any Intellectual Property Rights attaching to those materials.</td></tr>
+              <tr><th scope="row">Subscription</th><td>has meaning given in clause 5.3(a).</td></tr>
+              <tr><th scope="row">Support Services</th><td>has the meaning given in clause 3.2.</td></tr>
+              <tr><th scope="row">User</th><td>means end users of the Platform and any other third party granted access to the Platform by you.</td></tr>
+              <tr><th scope="row">User Data</th><td>means files, data, materials or any other information, which is uploaded to the Platform by you, including any Intellectual Property Rights attaching to those materials.</td></tr>
+              <tr><th scope="row">Website</th><td>means the website at <span class="todo">[insert URL]</span> and any other site operated by us in connection with Platform.</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <div class="schedule" id="sch1">
+          <p class="label" style="color: var(--on-field-faint);">Schedule 1</p>
+          <h2 class="mt-2">End User Licence Agreement</h2>
+
+          <h3 class="mt-6" style="color: var(--on-field);">Key terms</h3>
+          <table>
+            <thead><tr><th scope="col">Term</th><th scope="col">Meaning</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Account Holder</th><td>means a User who has registered for an account on the Platform.</td></tr>
+              <tr><th scope="row">End User or “you”</th><td>means any person who accesses the Platform other than the Head Licence Holder.</td></tr>
+              <tr><th scope="row">Head Licence Holder</th><td>means any provider which Lex Settle has entered into an agreement to provide the Platform.</td></tr>
+              <tr><th scope="row">Intellectual Property Rights</th><td>means all copyright, trade mark, design, patent, moral rights, confidential and other proprietary rights, and any other rights to registration of such rights whether created before or after the date of this EULA both in Australia and throughout the world.</td></tr>
+              <tr><th scope="row">Lex Settle</th><td>means Amanda Cherie Hole ABN 55 487 021 795 operating under the business name ‘Lex Settle’, the developer and owner of the Platform.</td></tr>
+              <tr><th scope="row">Platform</th><td>means the web and mobile application created by Lex Settle for the purposes of facilitating property settlement negotiation in family divorce and separation matters.</td></tr>
+            </tbody>
+          </table>
+
+          <section class="cl" id="s1">
+            <h2>Applicability and deemed acceptance</h2>
+            <ol class="lv-a">
+              <li>This EULA applies to any End users of the Platform. You agree to, and will be deemed to have accepted, this EULA when you access the Platform.</li>
+              <li>By accessing the Platform, you irrevocably consent to the terms of this EULA and represent and warrant that you will comply with the terms of the licence granted to you under this EULA. If you do not accept this EULA, you must not access, use or otherwise view the Platform.</li>
+              <li>This EULA commences on the date you are granted access to the Platform and you tick the box to agree to this EULA and will continue until your access to the Platform is terminated by the Head Licence Holder or Lex Settle.</li>
+            </ol>
+          </section>
+
+          <section class="cl" id="s2">
+            <h2>Accounts and guest access</h2>
+            <ol class="lv-a">
+              <li>You may be required to sign up for an account on the Platform (<span class="term">Account</span>) including in order to use the Platform for the relevant Purpose.</li>
+              <li>If an Account Holder sends you a link to access the Platform for the sole purpose of accepting, rejecting or making comments on an offer generated in the Platform (<span class="term">Guest User</span>), you will not be required to register an Account, but you may be required to provide personal information such as your name and date of birth.</li>
+              <li>When you register for an Account or access the Platform as a Guest User, you must provide true, accurate and complete information as requested and keep this information up to date after registration.</li>
+              <li>You agree that you are solely responsible for:
+                <ol class="lv-i">
+                  <li>if you are an Account Holder, maintaining the confidentiality and security of your Account information and your password;</li>
+                  <li>any activities and those of any third party that occur through your Account or your access as a Guest User, whether those activities have been authorised by you or not.</li>
+                </ol>
+              </li>
+              <li>You also agree to let us know if you detect any unusual activity on the Platform (whether on your Account or when you access the Platform as a Guest User) as soon as you become aware of it.</li>
+              <li>We will not be responsible to you for, and expressly disclaim any liability for, any cost, loss, damages or expenses arising out of a failure by you to maintain the security of your Account information or your password.</li>
+            </ol>
+          </section>
+
+          <section class="cl" id="s3">
+            <h2>Use of Lex Settle</h2>
+            <section class="cl-2">
+              <h3>Grant of licence</h3>
+              <ol class="lv-a">
+                <li>You are granted a revocable, worldwide, royalty-free licence to use the Platform for the purpose of:
+                  <ol class="lv-i">
+                    <li>if you are an Account Holder, for the purpose of identifying the property pool in a property settlement negotiation, making associated calculations and generating offers for parties to a divorce or separation matter; and</li>
+                    <li>if you have received a link from an Account Holder but have not registered an Account, accepting, rejecting or making comments on an offer generated on the Platform by an Account Holder,</li>
+                  </ol>
+                  <p class="lv-tail">(each a <span class="term">Purpose</span>).</p>
+                </li>
+                <li>You must only use the Platform:
+                  <ol class="lv-i">
+                    <li>in accordance with the limitations of the relevant Purpose;</li>
+                    <li>in a manner that is consistent and compliant with clause 3.2; and</li>
+                    <li>in compliance with any other restrictions as determined and notified to you by the Head Licence Holder and/ or Lex Settle from time to time.</li>
+                  </ol>
+                </li>
+              </ol>
+            </section>
+            <section class="cl-2">
+              <h3>Restrictions on licence</h3>
+              <p>Except in accordance with clause 3.1(b), you must not, without prior written approval from the Head Licence Holder or Lex Settle in their absolute discretion:</p>
+              <ol class="lv-a">
+                <li>permit any other person to use or access the Platform via your Account;</li>
+                <li>make copies of the documentation or any information presented on the Platform;</li>
+                <li>adapt, modify or tamper in any way with the Platform;</li>
+                <li>remove or alter any copyright, trade mark or other notice on or forming part of the Platform;</li>
+                <li>create derivative works from or translate the Platform or any information presented on the Platform;</li>
+                <li>publish or otherwise communicate the Platform to the public, including by making it available online or sharing it with third parties;</li>
+                <li>sell, loan, transfer, sub-licence, hire or otherwise dispose of the Platform; to any third party;</li>
+                <li>decompile or reverse engineer the Platform or any part of it, or otherwise attempt to derive its source code; or</li>
+                <li>attempt to circumvent any technological protection mechanism or other security feature of the Platform;</li>
+              </ol>
+            </section>
+            <section class="cl-2">
+              <h3>Limitations of Lex Settle</h3>
+              <p>The Platform is made available to you strictly on an ‘as is’ basis. Lex Settle does not guarantee, and make no warranties, to the extent permitted by law, that:</p>
+              <ol class="lv-a">
+                <li>the Platform will be free from errors or defects;</li>
+                <li>the Platform will be accessible or available at all times; or</li>
+                <li>any information provided through the Platform is accurate or true.</li>
+              </ol>
+            </section>
+          </section>
+
+          <section class="cl" id="s4">
+            <h2>Disclaimers</h2>
+            <ol class="lv-a">
+              <li>Lex Settle does not accept responsibility for any unauthorised use, destruction, loss, damage or alteration to your data or information, your computer systems, mobile phones or other electronic devices arising in connection with use of the Platform.</li>
+              <li>You must take your own precautions to ensure that the process which you employ for using the Platform does not expose you to the risk of hacking, malware, ransomware, viruses, malicious computer code or other forms of interference.</li>
+              <li>To the maximum extent permitted by applicable law, Lex Settle limits all liability to any person for loss or damage of any kind, however arising whether in contract, tort (including negligence), statute, equity, indemnity or otherwise, arising from or relating in any way to the Platform to $100 (AUD) in aggregate. This includes the transmission of any computer virus.</li>
+              <li>You indemnify Lex Settle and its employees, agents and contractors (<span class="term">Personnel</span>) in respect of all liability for loss, damage or injury which may be suffered by any person arising from, or in connection with, your use of the Platform or breach of this EULA (or both, as the case may be).</li>
+              <li>You acknowledge and agree that Lex Settle will have no liability for any act or omission by you which results in or contributes to damage, loss or expense suffered by you or another user in connection with the use of the Platform and indemnify Lex Settle for any such damage, loss or expense.</li>
+              <li>All express or implied representations and warranties given by Lex Settle or its Personnel are, to the maximum extent permitted by applicable law, excluded. Where any law implies a condition, warranty or guarantee into this EULA which may not lawfully be excluded, then to the maximum extent permitted by applicable law, Lex Settle (and its Personnel’s) liability for breach of that non-excludable condition, warranty or guarantee will, at our option, be limited to:
+                <ol class="lv-i">
+                  <li>in the case of goods, their replacement or the supply of equivalent goods or their repair; and</li>
+                  <li>in the case of Platform, the supply of the Platform again, or the payment of the cost of having them supplied again.</li>
+                </ol>
+              </li>
+              <li>To the maximum extent permitted under applicable law, including the <em>Competition and Consumer Act 2010</em> (Cth), under no circumstances will Lex Settle or its Personnel be liable for any incidental, special or consequential loss or damages, or damages for loss of data, business or business opportunity, goodwill, anticipated savings, profits or revenue arising under or in connection with the Platform, this EULA or their subject matter.</li>
+            </ol>
+          </section>
+
+          <section class="cl" id="s5">
+            <h2>Termination</h2>
+            <section class="cl-2">
+              <h3>Automatic termination</h3>
+              <p>This EULA will be automatically terminated, and your license to use the Platform will be immediately revoked, if the agreement between Lex Settle and the Head Licence Holder for the use of the Platform expires, is terminated or otherwise comes to an end.</p>
+            </section>
+            <section class="cl-2">
+              <h3>Termination by Lex Settle or Head Licence Holder</h3>
+              <p>Lex Settle or the Head Licence Holder (or both) may terminate this EULA immediately by notice to you if:</p>
+              <ol class="lv-a">
+                <li>you are in breach of any term of this EULA; or</li>
+                <li>you commit, or Lex Settle or the Head Licence Holder reasonably suspects that you may commit, any breach of this EULA.</li>
+              </ol>
+            </section>
+            <section class="cl-2">
+              <h3>Effect of expiry or termination</h3>
+              <ol class="lv-a">
+                <li>In the event of expiry or termination of this EULA, you must:
+                  <ol class="lv-i">
+                    <li>immediately cease using the Lex Settle; and</li>
+                    <li>remove the Lex Settle from all materials in your care, custody or control that feature the Lex Settle, and, if the Lex Settle cannot be removed, then at Lex Settle’s option, return or destroy all such material.</li>
+                  </ol>
+                </li>
+                <li>Termination of this EULA will not affect any rights accruing to any party to the date of termination nor any obligation performed to the date of termination or any obligation which expressly or impliedly survives termination of this EULA.</li>
+              </ol>
+            </section>
+            <section class="cl-2">
+              <h3>Your data on termination</h3>
+              <p>You are solely responsible for removing any information you store on the Platform prior to termination of this EULA. Lex Settle will not be liable to you for any loss of your or any other user’s data or information upon termination of this EULA.</p>
+            </section>
+          </section>
+
+          <section class="cl" id="s6">
+            <h2>Privacy</h2>
+            <!-- In the .docx this paragraph carries the Level-2 sub-heading style
+                 with numbering switched off, i.e. it is body copy in a heading's
+                 clothing. Set as the paragraph it reads as. -->
+            <p>By using the Platform, you agree to Lex Settle’s <a href="privacy-policy.html" class="textlink" style="color: var(--on-field);">“Privacy Policy”</a>, located <span class="todo">&lt;here&gt;</span>, which is incorporated into this EULA by reference. Please read the “Privacy Policy” carefully as it governs Lex Settle’s collection, use, and disclosure of personal information.</p>
+          </section>
+
+          <section class="cl" id="s7">
+            <h2>General</h2>
+            <section class="cl-2">
+              <h3>Governing law and jurisdiction</h3>
+              <p>This EULA is governed by the law applying in Queensland, Australia. Each party irrevocably submits to the exclusive jurisdiction of the courts of Queensland, Australia and courts of appeal from them in respect of any proceedings arising out of or in connection with this EULA. Each party irrevocably waives any objection to the venue of any legal process on the basis that the process has been brought in an inconvenient forum.</p>
+            </section>
+            <section class="cl-2">
+              <h3>Waiver</h3>
+              <p>No party to this EULA may rely on the words or conduct of any other party as a waiver of any right unless the waiver is in writing and signed by the party granting the waiver.</p>
+            </section>
+            <section class="cl-2">
+              <h3>Further acts and documents</h3>
+              <p>Each party must promptly do all further acts and execute and deliver all further documents required by law or reasonably requested by another party to give effect to this EULA.</p>
+            </section>
+            <section class="cl-2">
+              <h3>Assignment</h3>
+              <p>You cannot assign, novate or otherwise transfer your rights or obligations under this EULA without Lex Settle’s prior written consent.</p>
+            </section>
+            <section class="cl-2">
+              <h3>Entire agreement</h3>
+              <p>This EULA embodies the entire agreement between the parties and supersede any prior negotiation, conduct, arrangement, understanding or agreement, express or implied, in relation to the subject matter of this EULA.</p>
+            </section>
+          </section>
+        </div>
+
+      </div>
+
+      <p class="small legal__back">
+        <a href="index.html" class="textlink">&larr; Back to lexsettle.com</a>
+      </p>
+
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap" style="padding-block: var(--sp-6) var(--sp-4);">
+
+    <div class="grid md:grid-cols-12 gap-x-10 gap-y-10">
+      <div class="md:col-span-5">
+        <a href="index.html" class="logo" aria-label="Lex Settle — home">
+          <img class="logo__img" src="assets/logoWordmarkWhite.svg" alt="" width="142" height="41">
+        </a>
+        <p class="small mt-5 measure" style="color: var(--on-field-faint); max-width: 42ch;">
+          A property pool calculation and collaboration tool for property settlement matters.
+          Not legal advice.
+        </p>
+      </div>
+
+      <nav class="md:col-span-3" aria-label="Footer — product">
+        <p class="label" style="color: var(--on-field-faint);">Product</p>
+        <ul class="grid gap-3 mt-4 list-none p-0 m-0 small">
+          <li><a href="index.html#how-it-works">How it works</a></li>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#who-its-for">Who it's for</a></li>
+          <li><a href="index.html#pricing">Pricing</a></li>
+        </ul>
+      </nav>
+
+      <nav class="md:col-span-4" aria-label="Footer — company">
+        <p class="label" style="color: var(--on-field-faint);">Lex Settle</p>
+        <ul class="grid gap-3 mt-4 list-none p-0 m-0 small">
+          <li><a href="https://app.lexsettle.com/login">Sign in</a></li>
+          <li><a href="https://app.lexsettle.com/register">Create an account</a></li>
+          <li><a href="website-terms.html">Website terms</a></li>
+          <li><a href="app-terms.html">App terms &amp; conditions</a></li>
+          <li><a href="privacy-policy.html">Privacy policy</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="flex flex-wrap gap-x-6 gap-y-2 justify-between items-center small"
+         style="margin-top: var(--sp-6); padding-top: var(--sp-3); border-top: 1px solid rgba(255,255,255,.12); color: var(--on-field-faint);">
+      <p>© 2026 Lex Settle. All rights reserved.</p>
+      <p>lexsettle.com &nbsp;·&nbsp; lexsettle.com.au</p>
+    </div>
+
+  </div>
+</footer>
+
+</div><!-- /page -->
+
+<script src="assets/site.js"></script>
+
+</body>
+</html>

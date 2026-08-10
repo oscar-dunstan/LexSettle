@@ -1,0 +1,646 @@
+/* ==========================================================================
+   LEX SETTLE — SHARED BASE STYLESHEET
+   ==========================================================================
+   Extracted verbatim from index.html so the homepage and the three legal
+   pages read from ONE set of tokens. Sections 0-5 (tokens, base, the field,
+   layout primitives, type helpers, buttons, nav) plus the footer rules are
+   the parts every page needs; everything below section 5 in index.html is
+   homepage furniture and stays inline there.
+
+   Edit tokens HERE, not in any page's markup.
+   ========================================================================== */
+
+/* ==========================================================================
+   0. DESIGN TOKENS  —  edit everything here
+   ========================================================================== */
+:root {
+  /* --- Colour: base (from the Lex Settle app) --- */
+  --color-bg:        #FFFFFF;
+  --color-surface:   #F7F8FA;
+  --color-border:    #E5E7EB;
+  --color-ink:       #131A24;   /* headings, near-black navy */
+  --color-navy:      #1B2A4A;   /* deep navy */
+  --color-indigo:    #2B3A7A;   /* sidebar / base gradient partner */
+  --color-primary:   #2563EB;   /* bright blue — primary actions */
+  --color-accent:    #16A34A;   /* green — positive / agreed status */
+  --color-text:      #374151;   /* body */
+  --color-muted:     #6B7280;   /* secondary text */
+
+  /* --- Colour: the moving field (extends the app palette) --- */
+  --field-base:      #0C1526;   /* deepest ground */
+  --field-shadow:    #0A1424;   /* silk shadow blob */
+  --field-navy:      #1B2A4A;
+  --field-indigo:    #2B3A7A;
+
+  /* --- The silk shader's palette: a CONTRAST CONTRACT, not a mood board -----
+     These five are the only colours the fragment shader can emit, and the
+     sheen is a mix *toward* --field-peak rather than an additive highlight —
+     so every output pixel lands inside the convex hull of this list and the
+     field's brightest possible pixel is exactly --field-peak.
+     --field-peak sits at relative luminance 0.136, and the ceiling at which
+     --on-field-soft exactly clears 4.5:1 is 0.1445. So the margin is real but
+     THIN — about 6% of the way to failure, not the comfortable step implied by
+     an earlier version of this comment, which asserted 0.097 against a 0.106
+     ceiling. Both of those numbers were wrong, in the same direction, and the
+     effect was a peak that looked far safer on paper than it measures.
+     What that means in practice: this palette is at AA, not above it. Raising
+     --field-peak by even one step fails body copy on the field. Lower it and the
+     folds flatten into a black wash, which is the other way this effect dies.
+     Measured on the live canvas rather than assumed: the brightest pixel on the
+     whole field is exactly --field-peak, which is the convex-hull guarantee
+     below doing its job.
+     Adding an additive specular term breaks the guarantee silently, which is
+     why there isn't one. */
+  --field-trough:    #04081A;
+  --field-deep:      #131F3C;
+  --field-mid:       #243D70;
+  --field-peak:      #3A66B2;
+  --field-cobalt:    #2B57D6;   /* at the cap too — the hull is only as safe as its brightest vertex */
+
+  /* --- Colour: type on the field ---------------------------------------------
+     TWO GROUNDS, TWO TOKENS. The live gradient and the solid --field-base
+     panels are different backgrounds and cannot share a tertiary colour.
+
+     · On the LIVE FIELD there are two text tiers, not three. A third, dimmer
+       tier is arithmetically impossible: at the field's brightest a tertiary
+       colour would have to be as light as --on-field-soft to clear 4.5:1, so
+       it would not be dimmer. Tertiary on the field is therefore made with the
+       .label treatment — uppercase, 0.14em tracking, 600 — which separates it
+       by typography instead of by contrast. That is the better answer anyway.
+     · --on-field-faint is for SOLID --field-base only (the footer). There it
+       measures 6.7:1 and the third tier is real. Using it on the live gradient
+       is the bug this replaced: it measured 2.7:1 against the old field's
+       bright regions, so every kicker and price line on the gradient failed. */
+  --on-field:        #FFFFFF;   /* measured 5.64:1 on --field-peak */
+  --on-field-soft:   #E4EBF5;   /* tinted from the field hue, never grey — measured 4.70:1 */
+  --on-field-faint:  #8FA6C8;   /* solid --field-base only — 7.35:1 there, 2.7:1 on the live field */
+
+  /* --gradient-band is gone: its only consumer was the placeholder logo tile in
+     the scrolled nav, and the real lockup brings its own colour. A token with no
+     consumer is a suggestion to invent one. */
+
+  /* --- Type --- */
+  --font-sans:  'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fs-display: clamp(2.9rem, 6.6vw, 5.5rem);
+  --fs-h2:      clamp(2.05rem, 4.1vw, 3.4rem);
+  --fs-h3:      clamp(1.3rem, 1.9vw, 1.65rem);
+  --fs-lead:    clamp(1.08rem, 1.5vw, 1.3rem);
+  --fs-body:    1.0625rem;
+  --fs-small:   0.9375rem;
+  --fs-label:   0.75rem;
+  --lh-display: 1.02;
+  --lh-heading: 1.08;
+  --lh-body:    1.65;
+  --tr-display: -0.038em;
+  --tr-heading: -0.028em;
+  --tr-label:   0.14em;
+
+  /* --- Spacing scale --- */
+  --sp-1:  0.5rem;
+  --sp-2:  1rem;
+  --sp-3:  1.5rem;
+  --sp-4:  2rem;
+  --sp-5:  3rem;
+  --sp-6:  4rem;
+  --sp-7:  6rem;
+  --sp-8:  8rem;
+  --section-y:   clamp(4.5rem, 9vw, 8.5rem);   /* vertical rhythm inside slabs */
+  --field-y:     clamp(5rem, 11vw, 10rem);     /* vertical rhythm on the field */
+  --gutter:      clamp(1.25rem, 4vw, 4rem);
+  --measure:     68ch;
+  /* Left inset of the horizontal rail, so panel 1 aligns with the heading above it */
+  --rail-pad:    max(var(--gutter), calc((100vw - var(--maxw)) / 2 + var(--gutter)));
+
+  /* --- Shape --- */
+  --r-slab:   clamp(20px, 2.4vw, 34px);   /* price card only */
+  --r-card:   16px;                       /* hero frame only */
+  --r-pill:   999px;
+  --maxw:     1240px;
+
+  /* Ratio of the three how-it-works step assets, so the frames neither crop nor
+     letterbox them. 1.439 is measured off the delivered files (1800x1251 each,
+     all three identical). Re-export them at a different ratio and this is the one
+     number to change — see § 6. and the pinned rail. */
+  --step-ratio: 1.439;
+
+  /* --- Depth ---
+     Two shadows, because the page has exactly two objects that lift off their
+     ground: the hero frame and the price card. Everything else is a whole
+     region, a hairline, an image well or a knockout. Reaching for a third
+     shadow token means a card is being drawn that shouldn't be. */
+  --shadow-frame: 0 30px 70px -24px rgba(4, 10, 24, .65);
+  --shadow-slab:  0 24px 60px -20px rgba(6, 14, 30, .45), 0 2px 8px -2px rgba(6, 14, 30, .18);
+
+  /* --- Motion --- */
+  --ease-out:  cubic-bezier(.16, 1, .3, 1);
+  --dur-fast:  180ms;
+  --dur-med:   420ms;
+  --dur-slow:  900ms;
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 6rem; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--color-text);
+  background: var(--field-base);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* `clip` not `hidden`. Both contain the full-bleed frames, but `hidden`
+     turns <body> into a scroll container, which breaks position: sticky for
+     the pinned rail in section 4. `clip` creates no scroll container.
+     The `hidden` line is the fallback for engines without `clip`. */
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+h1, h2, h3, h4 { margin: 0; color: var(--color-ink); font-weight: 700; letter-spacing: var(--tr-heading); line-height: var(--lh-heading); text-wrap: balance; }
+p { margin: 0; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+
+::selection { background: var(--color-primary); color: #fff; }
+
+:where(a, button, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.on-field :where(a, button):focus-visible { outline-color: #fff; }
+
+/* ==========================================================================
+   1. THE FIELD — fixed, slowly-moving silk gradient behind the whole document
+      Ports to Webflow as a single embed dropped at the top of <body>.
+   ========================================================================== */
+/* z-index -1 (not 0) so .page needs no stacking context of its own — that is
+   what lets the knockout band in Section 9 blend against this field. */
+.field {
+  position: fixed;
+  inset: -12vmax;              /* over-bleed so blurred blobs never show an edge */
+  z-index: -1;
+  background: var(--field-base);
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+/* THE FALLBACK IS UNDER THE SAME CEILING. The blob layer used to peak at
+   #5C82BC and #2563EB — relative luminance 0.219 and 0.150, both far above the
+   0.097 ceiling the shader guarantees. That mattered the moment the tertiary
+   on-field type was promoted to --on-field-soft on the strength of that
+   ceiling: with WebGL the page measured 4.8:1, and without it the same text
+   over the steel blob measured 3.6:1. A contract that only holds on the fast
+   path is not a contract, so the fallback draws from the capped palette too.
+   --field-steel and --field-blue are gone rather than left unused. */
+
+/* --- 1a. The silk shader ---------------------------------------------------
+   The blob layer below is the *fallback*, not the design. Where WebGL is
+   available the canvas paints an opaque, domain-warped silk gradient over the
+   top and the blobs stand down.
+
+   Why a shader at all: a crease has a direction and a ridge. Five blurred
+   circles can make soft lobes and nothing else — no amount of extra layers,
+   blend modes or animated stops gets them to fold. The reference's field is a
+   shader for exactly this reason.
+
+   .field is inset -12vmax so its blurred blobs never show an edge. The canvas
+   needs no such over-bleed, so it cancels it with inset: 12vmax and covers
+   precisely the viewport — that also keeps the rendered pixel count honest.
+   Sizing/DPR/frame-rate budget lives in the <script>. */
+/* Explicit width/height, not `inset: 12vmax`. A <canvas> is a replaced element:
+   with left and right both set and width:auto it resolves to its *intrinsic*
+   size and ignores the opposite offset, so an inset shorthand silently leaves a
+   300px-wide canvas in the corner. The 12vmax offset cancels .field's
+   over-bleed, so this covers exactly the viewport. */
+.field__gl {
+  position: absolute;
+  top: 12vmax;
+  left: 12vmax;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  opacity: 0;
+  transition: opacity 1100ms var(--ease-out);
+}
+.field.is-gl .field__gl { opacity: 1; }
+/* Covered by an opaque canvas once the shader is live: animating five blurred
+   90–130px-radius layers under it is pure cost. Visibility is withdrawn only
+   after the crossfade, so the handover is never visible. */
+.field.is-gl .field__blob {
+  animation: none;
+  visibility: hidden;
+  transition: visibility 0s linear 1100ms;
+  /* AND GIVE THE LAYERS BACK. will-change on the base rule is correct while the
+     blobs are the field — they animate continuously — but once the shader has taken
+     over they are hidden and their animation is off, and a promoted layer that
+     never changes is pure cost: five over-bleed, 78–92vmax layers held on the GPU
+     for nothing, on exactly the hardware the fallback exists to serve. */
+  will-change: auto;
+}
+/* The grain layer stays on over the shader — it is native resolution and the
+   shader's buffer is not, so this is the only place 1px grain can come from. */
+
+.field__blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  will-change: transform;
+  transform: translateZ(0);
+}
+@media (min-width: 768px) { .field__blob { filter: blur(130px); } }
+
+.field__blob--a { width: 78vmax; height: 78vmax; left: -18vmax; top: -22vmax;
+  background: radial-gradient(circle at 50% 50%, var(--field-peak) 0%, rgba(58,102,178,.45) 45%, rgba(58,102,178,0) 70%);
+  animation: driftA 34s var(--ease-out) infinite alternate; }
+.field__blob--b { width: 92vmax; height: 92vmax; right: -30vmax; top: -14vmax;
+  background: radial-gradient(circle at 50% 50%, var(--field-indigo) 0%, rgba(43,58,122,.55) 48%, rgba(43,58,122,0) 72%);
+  animation: driftB 44s var(--ease-out) infinite alternate; }
+.field__blob--c { width: 70vmax; height: 70vmax; left: 8vmax; bottom: -26vmax;
+  background: radial-gradient(circle at 50% 50%, var(--field-cobalt) 0%, rgba(43,87,214,.38) 46%, rgba(43,87,214,0) 70%);
+  animation: driftC 52s var(--ease-out) infinite alternate; }
+.field__blob--d { width: 86vmax; height: 86vmax; left: 22vmax; top: 6vmax;
+  background: radial-gradient(circle at 50% 50%, var(--field-shadow) 0%, rgba(10,20,36,.82) 42%, rgba(10,20,36,0) 68%);
+  animation: driftD 38s var(--ease-out) infinite alternate; }
+.field__blob--e { width: 58vmax; height: 58vmax; right: -8vmax; bottom: -18vmax;
+  background: radial-gradient(circle at 50% 50%, var(--field-navy) 0%, rgba(27,42,74,.6) 50%, rgba(27,42,74,0) 74%);
+  animation: driftE 46s var(--ease-out) infinite alternate; }
+
+@keyframes driftA { from { transform: translate3d(0,0,0) scale(1); }      to { transform: translate3d(14vmax, 10vmax, 0) scale(1.18); } }
+@keyframes driftB { from { transform: translate3d(0,0,0) scale(1.1); }    to { transform: translate3d(-16vmax, 16vmax, 0) scale(.92); } }
+@keyframes driftC { from { transform: translate3d(0,0,0) scale(.95); }    to { transform: translate3d(18vmax, -14vmax, 0) scale(1.22); } }
+@keyframes driftD { from { transform: translate3d(0,0,0) scale(1.05); }   to { transform: translate3d(-20vmax, -8vmax, 0) scale(.88); } }
+@keyframes driftE { from { transform: translate3d(0,0,0) scale(1); }      to { transform: translate3d(-12vmax, -18vmax, 0) scale(1.15); } }
+
+/* --- FILM GRAIN. Native resolution, and animated.
+       This is the "noisy" half of the reference's look, and there it is a
+       shader pass that reseeds per-pixel white noise off floor(uTime) and mixes
+       it at 4% — animated grain, not a fixed texture. Two things follow:
+
+       · It cannot live in the field shader. That buffer renders at half scale
+         and is upscaled, so per-fragment noise lands on screen as ~2px blocks —
+         chunky digital noise instead of grain. This layer is a DOM element at
+         native resolution, so its grain is 1px.
+       · It has to move. A static turbulence texture is a paper texture; the
+         shimmer is what reads as film.
+
+       Animated by stepping `transform` through ten offsets a second. Transform
+       is the only property here that stays on the compositor — animating
+       background-position would repaint a full-viewport layer 10 times a
+       second. The layer is oversized by 50% each way so the translations never
+       expose an edge. --- */
+.field__grain {
+  position: absolute;
+  inset: -25%;
+  width: 150%; height: 150%;
+  opacity: .15;
+  /* soft-light, not overlay. Overlay with a greyscale noise texture drags
+     saturation out of exactly the midtones this field lives in — part of why an
+     earlier build read grey rather than blue. soft-light grains just as
+     legibly and leaves the chroma alone. */
+  mix-blend-mode: soft-light;
+  background-repeat: repeat;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  will-change: transform;
+}
+/* Ten discrete offsets, held (steps) rather than interpolated — interpolating
+   would slide the texture, which reads as drifting paper, not as grain. */
+@keyframes grainStep {
+  0%   { transform: translate3d(0, 0, 0); }
+  10%  { transform: translate3d(-6%, 3%, 0); }
+  20%  { transform: translate3d(4%, -5%, 0); }
+  30%  { transform: translate3d(-3%, -4%, 0); }
+  40%  { transform: translate3d(5%, 4%, 0); }
+  50%  { transform: translate3d(-5%, -2%, 0); }
+  60%  { transform: translate3d(2%, 5%, 0); }
+  70%  { transform: translate3d(-4%, 4%, 0); }
+  80%  { transform: translate3d(6%, -3%, 0); }
+  90%  { transform: translate3d(-2%, -6%, 0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .field__grain { animation: grainStep 1s steps(1, end) infinite; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .field__blob { animation: none !important; }
+  /* Under reduced motion the shader still renders — one static frame, so the
+     silk is present and simply holds still, which is better than dropping to
+     the blob fallback. But the handover itself must not be an animation: swap
+     the layers on the same frame rather than cross-fading for a second. */
+  .field__gl { transition: none !important; }
+  .field.is-gl .field__blob { transition: none !important; }
+}
+
+/* ==========================================================================
+   2. LAYOUT PRIMITIVES
+   ========================================================================== */
+/* No z-index here on purpose — see .field above. */
+.page { position: relative; }
+.wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+
+/* --- Region A: sections that sit directly on the field --- */
+.on-field { color: var(--on-field-soft); padding-block: var(--field-y); }
+.on-field h1, .on-field h2, .on-field h3 { color: var(--on-field); }
+
+/* --- Region B: one continuous full-bleed white sheet, edge to edge.
+       Deliberately NOT floating rounded cards — the page alternates whole
+       regions, not a stack of panels. --- */
+.white-run { background: var(--color-bg); color: var(--color-text); }
+.white-run > section { padding-block: var(--section-y); }
+.white-run > section + section { border-top: 1px solid var(--color-border); }
+/* The knockout above already opened the sheet and carries the heading, so this
+   section starts on its content, not on a full section's worth of air. */
+.white-run > section.is-after-knockout { padding-top: var(--sp-6); }
+
+/* Hairline column heads, used on the field where a card would be too heavy */
+.ruled { border-top: 1px solid rgba(255,255,255,.26); padding-top: var(--sp-3); }
+
+/* ==========================================================================
+   3. TYPE HELPERS
+   ========================================================================== */
+.display   { font-size: var(--fs-display); line-height: var(--lh-display); letter-spacing: var(--tr-display); font-weight: 700; }
+.h2        { font-size: var(--fs-h2); }
+.h3        { font-size: var(--fs-h3); letter-spacing: -0.02em; }
+.lead      { font-size: var(--fs-lead); line-height: 1.55; max-width: var(--measure); }
+.small     { font-size: var(--fs-small); }
+.measure   { max-width: var(--measure); }
+.label {
+  font-size: var(--fs-label); font-weight: 600; letter-spacing: var(--tr-label);
+  text-transform: uppercase; line-height: 1.4;
+}
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* ==========================================================================
+   4. BUTTONS & LINKS
+   ========================================================================== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  min-height: 48px; padding: 0 1.5rem;
+  border-radius: var(--r-pill); border: 1px solid transparent;
+  font-size: var(--fs-small); font-weight: 600; letter-spacing: -0.01em;
+  text-decoration: none; cursor: pointer; white-space: nowrap;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out);
+}
+.btn:active { transform: translateY(1px); }
+
+/* On the field */
+.btn--light   { background: #fff; color: var(--color-ink); box-shadow: 0 8px 24px -10px rgba(4,10,24,.7); }
+.btn--light:hover   { background: #EAF0FB; }
+.btn--ghost   { background: rgba(255,255,255,.06); color: #fff; border-color: rgba(255,255,255,.42); backdrop-filter: blur(8px); }
+.btn--ghost:hover   { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.75); }
+
+/* On white */
+.btn--primary { background: var(--color-primary); color: #fff; box-shadow: 0 8px 20px -10px rgba(9, 18, 36, .55); }
+.btn--primary:hover { background: #1D4FD8; box-shadow: 0 12px 26px -10px rgba(9, 18, 36, .6); }
+.btn--outline { background: transparent; color: var(--color-ink); border-color: var(--color-border); }
+.btn--outline:hover { border-color: var(--color-ink); background: var(--color-surface); }
+
+.btn--lg { min-height: 54px; padding: 0 1.9rem; font-size: 1rem; }
+
+/* Stacked CTAs read as one block on narrow screens */
+@media (max-width: 479px) { .cta-row .btn { width: 100%; } }
+
+.textlink {
+  text-decoration: none; font-weight: 500;
+  border-bottom: 1px solid currentColor; padding-bottom: 1px;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+.textlink:hover { opacity: .65; }
+
+/* ==========================================================================
+   5. NAV  (transparent over the hero → white sheet once you scroll)
+   ========================================================================== */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+  transition: background-color var(--dur-med) var(--ease-out),
+              box-shadow var(--dur-med) var(--ease-out),
+              border-color var(--dur-med) var(--ease-out),
+              backdrop-filter var(--dur-med) var(--ease-out);
+  border-bottom: 1px solid transparent;
+}
+/* THREE COLUMNS, so the middle one is ACTUALLY centred.
+   This was a flex row with `margin-inline: auto` on the links and
+   `margin-left: auto` on the actions — three auto margins, and flexbox divides
+   free space equally between all of them. At 1280px that is 131.56px each, which
+   gives the links one share on their left and two on their right: measured 110.5px
+   left of centre. Auto margins cannot centre a middle item when a sibling also
+   claims one; they can only centre it against a single opposing auto.
+
+   `1fr auto 1fr` centres the middle column on the container and keeps it there as
+   the flanks change width — and they do: the logo swaps between two files and the
+   actions drop their CTA below 520px. It also puts the links on the same axis as
+   the hero copy and the device below it, which is the axis the first viewport is
+   already built on.
+
+   EVERY ITEM NAMES ITS COLUMN, and that is not belt-and-braces. Below 900px the
+   links are `display: none`, which does not make them a zero-width grid item — it
+   stops them being a grid item at all, so auto-placement slid the actions up into
+   column 2 and left the hamburger stranded mid-row at 167px instead of pinned to
+   the right edge. Explicit `grid-column` makes each item's position independent of
+   how many siblings are currently rendered. */
+.nav__inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center; gap: var(--sp-3);
+  min-height: 72px;
+  width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter);
+}
+/* justify-self, because a grid item defaults to stretching its column: the logo
+   would keep its 118px of artwork but carry a ~500px-wide clickable box. */
+.nav .logo { grid-column: 1; justify-self: start; }
+.nav__links { display: none; grid-column: 2; gap: 1.75rem; justify-self: center; }
+.nav__link {
+  text-decoration: none; font-size: var(--fs-small); font-weight: 500;
+  color: rgba(255,255,255,.82); padding: .5rem 0;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.nav__link:hover { color: #fff; }
+/* justify-self: end, not margin-left: auto — that auto margin was one of the three
+   competing for free space and part of why the links sat off-centre. */
+.nav__actions { display: flex; align-items: center; gap: .75rem; grid-column: 3; justify-self: end; }
+.nav__signin {
+  display: none; text-decoration: none; font-size: var(--fs-small); font-weight: 600;
+  color: rgba(255,255,255,.9); min-height: 44px; align-items: center; padding-inline: .5rem;
+}
+.nav__signin:hover { color: #fff; }
+
+/* scrolled state */
+.nav.is-scrolled {
+  background: rgba(255,255,255,.92);
+  backdrop-filter: saturate(180%) blur(16px);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  border-bottom-color: var(--color-border);
+}
+.nav.is-scrolled .nav__link   { color: var(--color-text); }
+.nav.is-scrolled .nav__link:hover { color: var(--color-ink); }
+.nav.is-scrolled .nav__signin { color: var(--color-ink); }
+/* The logo's scrolled state is a file swap now, not a recolour — see § Logo. */
+.nav.is-scrolled .btn--light  { background: var(--color-primary); color: #fff; box-shadow: 0 8px 20px -10px rgba(9, 18, 36, .45); }
+.nav.is-scrolled .btn--light:hover { background: #1D4FD8; }
+.nav.is-scrolled .navtoggle   { color: var(--color-ink); border-color: var(--color-border); }
+
+@media (min-width: 900px) {
+  .nav__links { display: flex; }
+  .nav__signin { display: inline-flex; }
+}
+
+/* Logo — the supplied brand lockup, 142x41.
+   Replaces a placeholder that drew its own 30px rounded tile with "LS" set in
+   Inter. The tile is gone rather than kept as a container: the real mark is its
+   own shape at 44x40 and reads as one object with the wordmark, so wrapping it
+   would put a box around a logo that already has an edge.
+
+   TWO FILES, NOT ONE WITH currentColor. The supplied mark is two-tone — #03045E
+   body with a #21ABF0 accent — so driving it from a single CSS colour would
+   flatten the accent and quietly redraw the brand. The white file is the brand's
+   own single-colour variant, not a tint of the colour one, which is the other
+   reason a filter or a mask would be the wrong tool here.
+
+   34px tall is matched to the type it replaces, not picked: the wordmark's cap
+   height is 14.5 of the file's 41 units, so at 34px it renders at 12.0px against
+   the 12.4px cap height of the 17px Inter wordmark that was there. The lockup
+   comes out 118px wide against the placeholder's ~125px, so the nav's balance
+   is unchanged. */
+.logo { display: inline-flex; align-items: center; text-decoration: none; color: #fff; min-height: 44px; }
+.logo__img { display: block; width: auto; height: 34px; }
+
+/* In the nav the logo crosses two grounds — transparent over the dark field,
+   then a white sheet once scrolled — so both variants ship and cross-fade on the
+   nav's own timing. Stacked absolutely rather than toggled with `display`, so the
+   swap cannot reflow the header mid-transition. */
+.nav .logo { position: relative; }
+.nav .logo__img { transition: opacity var(--dur-med) var(--ease-out); }
+.nav .logo__img--dark {
+  position: absolute; top: 50%; left: 0;
+  transform: translateY(-50%);
+  opacity: 0;
+}
+.nav.is-scrolled .logo__img--light { opacity: 0; }
+.nav.is-scrolled .logo__img--dark  { opacity: 1; }
+
+/* Mobile nav */
+.navtoggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: transparent; border: 1px solid rgba(255,255,255,.34); color: #fff; cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              color var(--dur-med) var(--ease-out);
+}
+.navtoggle:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.7); }
+.nav.is-scrolled .navtoggle:hover { background: var(--color-surface); border-color: var(--color-ink); }
+@media (min-width: 900px) { .navtoggle { display: none; } }
+
+/* THE ICON NAMES THE ACTION. Three lines fold into a cross: the top and bottom
+   rotate onto the middle's axis while the middle scales out from its centre. It
+   is driven off [aria-expanded], not a second class — the state is already in the
+   DOM for assistive tech, so adding a parallel class would give the same fact two
+   sources that can disagree.
+   transform-box: view-box makes the transform-origin resolve in viewBox units, so
+   10px 10px is the icon's true centre regardless of rendered size, and translateY
+   moves in the same units the lines were drawn in (y=6 and y=14 → 10). */
+.navicon__l {
+  stroke: currentColor; stroke-width: 1.6; stroke-linecap: round;
+  transform-box: view-box; transform-origin: 10px 10px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .navicon__l { transition: transform 260ms var(--ease-out), opacity 150ms var(--ease-out); }
+}
+/* ORDER MATTERS, AND IT IS THE REVERSE OF HOW IT READS. A transform list applies
+   right-to-left, so `translateY(4px) rotate(45deg)` rotates FIRST and translates
+   after — the top line swung around the icon's centre while still 4px above it,
+   landing its midpoint at (12.83, 11.17) instead of (10, 10). The bottom arm
+   mirrored it to (12.83, 8.83), so the two crossed 2.8 units right of centre in a
+   20-unit icon and the cross sat visibly off-axis in its 46px button.
+   Rotate LAST: translate the line onto the centre, then spin it there. Both arms
+   now resolve to (10, 10) and cross exactly on the origin they rotate about. */
+[aria-expanded="true"] .navicon__l--t { transform: rotate(45deg) translateY(4px); }
+[aria-expanded="true"] .navicon__l--m { opacity: 0; transform: scaleX(.3); }
+[aria-expanded="true"] .navicon__l--b { transform: rotate(-45deg) translateY(-4px); }
+
+/* Below 520px the header CTA crowds the logo — it lives in the menu panel instead */
+@media (max-width: 519px) { .nav__actions > .btn { display: none; } }
+
+/* THE PANEL WIPES, IT DOES NOT APPEAR. This was the page's one state change with
+   no motion at all — display:none → block, popping open with nothing to say where
+   it came from. It is also the only one that had to be built without animating
+   layout: the panel lives inside the fixed header, so its height affects nothing
+   in the document, but `height: auto` still cannot be transitioned.
+
+   clip-path instead. The panel is always laid out and simply revealed downward
+   from its own top edge, which is the direction it arrives from — so the motion
+   describes the geometry rather than decorating it.
+
+   visibility, not display, for the closed state, and that is the accessibility
+   half: `display: none` cannot animate, but a merely transparent panel would keep
+   six links in the tab order and in the accessibility tree while invisible.
+   visibility removes them from both, and its transition is delayed by the wipe
+   duration on close so the panel stays rendered while it is closing — the same
+   trick the field uses to hand over from the blobs to the shader. */
+.navpanel {
+  display: block;
+  /* ABSOLUTE, AND THIS IS LOAD-BEARING, NOT TIDINESS. Keeping the panel in the
+     header's flow so it could animate grew the header's own box from 72px to
+     442px — and a fixed header is still a hit target across its whole box even
+     where it paints nothing, so `visibility: hidden` on the panel did not save it.
+     Measured with elementFromPoint: every point in the 370px band below the bar
+     returned header.nav, which on a phone is the hero's buttons made untappable.
+     Out of flow, the header's box is the bar again and the panel overflows it
+     visually without claiming any of the page. */
+  position: absolute; top: 100%; left: 0; right: 0;
+  background: #fff; border-top: 1px solid var(--color-border);
+  padding: var(--sp-2) var(--gutter) var(--sp-3);
+  clip-path: inset(0 0 100% 0);
+  visibility: hidden;
+  transition: clip-path 300ms var(--ease-out), visibility 0s linear 300ms;
+}
+.navpanel.is-open {
+  clip-path: inset(0 0 0 0);
+  visibility: visible;
+  transition: clip-path 380ms var(--ease-out), visibility 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .navpanel, .navpanel.is-open { transition: none; }
+}
+/* :not(.btn), because the panel's last child is a CTA and this rule was eating it.
+   `.navpanel a` is (0,1,1) — a class plus an element — and every button modifier
+   is a bare class at (0,1,0), so the list styling won a specificity contest it
+   should never have entered: the primary CTA rendered with the list's ink text on
+   its blue ground (3.1:1, under AA) and carried a hairline rule under a pill.
+   Excluding .btn is the fix rather than bumping .btn--primary, because the button
+   modifiers are shared with the rest of the page and should not have to out-specify
+   one container to work inside it. */
+.navpanel a:not(.btn) {
+  display: flex; align-items: center; min-height: 52px;
+  text-decoration: none; color: var(--color-ink); font-weight: 500;
+  border-bottom: 1px solid var(--color-border);
+}
+.navpanel .btn { width: 100%; margin-top: var(--sp-2); }
+/* !important, because the base rule now sets display:block rather than none. */
+@media (min-width: 900px) { .navpanel { display: none !important; } }
+
+
+/* ==========================================================================
+   FOOTER — shared by every page (was section 7 of index.html)
+   ========================================================================== */
+.footer { background: var(--field-base); color: var(--on-field-soft); }
+/* inline-flex with a min-height, because as plain inline links these were 18px
+   tall — under the 24px floor of WCAG 2.2 SC 2.5.8, and a genuinely small target
+   on a phone. The nav links already had padding for this reason; the footer set
+   was missed. inline-flex keeps them on their own line in the column lists while
+   giving the box a real height, and align-items keeps the text optically where it
+   was so nothing in the footer moves. */
+.footer a {
+  display: inline-flex; align-items: center; min-height: 28px;
+  text-decoration: none; color: var(--on-field-soft);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.footer a:hover { color: #fff; }
