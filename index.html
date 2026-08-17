@@ -784,6 +784,31 @@
 @media (prefers-reduced-motion: no-preference) {
   [data-enter] { animation: heroIn 760ms var(--ease-out) both; animation-delay: var(--enter-delay, 0ms); }
 }
+
+/* Stage entrance: the device currently just appears once the copy above it
+   is done staggering in — the one elevated object in the first viewport was
+   the one thing on load that didn't arrive.
+
+   Delayed to 380ms so it starts right as the last copy stagger (320ms) is
+   lifting off, rather than after a dead gap once everything above it has
+   already settled — the product is the thing the copy is introducing, not an
+   afterthought that shows up once introductions are over.
+
+   Longer (820ms) and further-travelled (48px vs the copy's 26px) than
+   heroIn: it's the biggest, heaviest object on the page, so it should read as
+   settling into place rather than sharing the copy's lighter arrival. The
+   .97→1 scale is the only place this rhymes with stageDrift's scroll-driven
+   scale on the parent `.stage__frame` — kept tiny (a settle, not a zoom) so
+   the two don't compete, and applied to `.shot--stage` (the inner frame)
+   rather than `.stage__frame` so this entrance's own `animation` shorthand
+   never collides with the parallax's on the parent.
+
+   Plain CSS, same as heroIn: no `.js-motion` gate, so it plays with no JS at
+   all and only `prefers-reduced-motion` can turn it off. */
+@keyframes stageIn { from { opacity: 0; transform: translate3d(0, 48px, 0) scale(.97); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .shot--stage { animation: stageIn 820ms var(--ease-out) both; animation-delay: 380ms; }
+}
 </style>
 </head>
 
